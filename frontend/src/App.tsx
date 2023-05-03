@@ -5,7 +5,7 @@ import { Container } from "react-bootstrap";
 
 function App() {
   return (
-    <div className="bg-secondary bg-opacity-25 h-100">
+    <div className="bg-secondary bg-opacity-25 h-auto">
       <Header />
       <MainScreen />
       <Footer />
