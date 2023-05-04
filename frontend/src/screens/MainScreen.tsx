@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import { ExpensesTable } from "../components";
+import { ExpensesTable, ExpensesForm } from "../components";
 
 const monthsList: string[] = [
   "January",
@@ -50,9 +50,7 @@ function MainScreen() {
       <Row className="my-2">
         <Col md={2}>
           {" "}
-          <Button variant="outline-dark" size="sm">
-            Add
-          </Button>
+          <ExpensesForm />
         </Col>
         <Col>
           {" "}
