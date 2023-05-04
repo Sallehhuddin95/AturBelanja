@@ -1,5 +1,7 @@
 import React from "react";
-import { Table, Row, Col } from "react-bootstrap";
+import { Table, Row, Col, Button } from "react-bootstrap";
+import { dummyExpenses } from "../assets/dummyData";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
 const monthsList: string[] = [
   "January",
@@ -18,8 +20,6 @@ const monthsList: string[] = [
 
 function ExpensesTable(props: any) {
   const { selectedMonth, selectedYear } = props;
-  console.log(selectedMonth, selectedYear);
-
   const currentDay = new Date().getDate();
 
   const numberOfDaysInMonth = (year: number, monthName: string): number => {
@@ -34,6 +34,14 @@ function ExpensesTable(props: any) {
   const daysInMonth = numberOfDaysInMonth(selectedYear, selectedMonth);
 
   const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+  const handleEdit = (id: number) => {
+    console.log("Edit id: ", id);
+  };
+
+  const handleDelete = (id: number) => {
+    console.log("Delete id: ", id);
+  };
 
   return (
     <>
@@ -56,16 +64,33 @@ function ExpensesTable(props: any) {
                   <th>Category</th>
                   <th>Price (RM)</th>
                   <th>Payment Method</th>
+                  <th>Note</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Test</td>
-                  <td>Test</td>
-                  <td>Test</td>
-                  <td>Test</td>
-                </tr>
+                {dummyExpenses.map((expense, index) => (
+                  <tr key={expense.id}>
+                    <td>{index + 1}</td>
+                    <td>{expense.details}</td>
+                    <td>{expense.category}</td>
+                    <td>{expense.price}</td>
+                    <td>{expense.paymentMethod}</td>
+                    <td>{expense.note}</td>
+                    <td className="d-flex justify-content-center">
+                      {" "}
+                      <Button
+                        className="me-2"
+                        onClick={() => handleEdit(expense.id)}
+                      >
+                        <FaEdit />
+                      </Button>
+                      <Button onClick={() => handleDelete(expense.id)}>
+                        <FaTrashAlt />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
           </Row>
