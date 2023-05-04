@@ -87,7 +87,10 @@ function MainScreen() {
       </Row>
       <Row>
         <Col>
-          <ExpensesTable />
+          <ExpensesTable
+            selectedMonth={selectedMonth}
+            selectedYear={selectedYear}
+          />
         </Col>
       </Row>
     </Container>
