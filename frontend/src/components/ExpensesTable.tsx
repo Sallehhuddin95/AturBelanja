@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Row, Col, Button } from "react-bootstrap";
 import { dummyExpenses } from "../assets/dummyData";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import Axios from "axios";
 
 const monthsList: string[] = [
   "January",
@@ -18,7 +19,18 @@ const monthsList: string[] = [
   "December",
 ];
 
+interface expenseRecord {
+  id: string;
+  date: Date;
+  detail: string;
+  price: number;
+  payment: string;
+  category: string;
+  note: string;
+}
+
 function ExpensesTable(props: any) {
+  const [expenses, setExpenses] = useState<expenseRecord[]>([]);
   const { selectedMonth, selectedYear } = props;
   const currentDay = new Date().getDate();
 
@@ -35,13 +47,24 @@ function ExpensesTable(props: any) {
 
   const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
-  const handleEdit = (id: number) => {
+  const handleEdit = (id: string) => {
     console.log("Edit id: ", id);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     console.log("Delete id: ", id);
   };
+
+  useEffect(() => {
+    Axios.get<expenseRecord[]>("http://127.0.0.1:8000/api/expense-records")
+      .then((response) => {
+        console.log(response.data[0]);
+        setExpenses(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <>
@@ -69,13 +92,13 @@ function ExpensesTable(props: any) {
                 </tr>
               </thead>
               <tbody>
-                {dummyExpenses.map((expense, index) => (
+                {expenses.map((expense, index) => (
                   <tr key={expense.id}>
                     <td>{index + 1}</td>
-                    <td>{expense.details}</td>
+                    <td>{expense.detail}</td>
                     <td>{expense.category}</td>
                     <td>{expense.price}</td>
-                    <td>{expense.paymentMethod}</td>
+                    <td>{expense.payment}</td>
                     <td>{expense.note}</td>
                     <td className="d-flex justify-content-center">
                       {" "}

@@ -8,10 +8,10 @@ from django.db import models
 
 class DailyExpense(models.Model):
     date = models.DateField()
-    amount = models.FloatField()
     detail = models.CharField(max_length=100)
     category = models.CharField(max_length=100)
     note = models.TextField()
+    price = models.FloatField()
     payment = models.CharField(max_length=100)
 
     def __str__(self):
