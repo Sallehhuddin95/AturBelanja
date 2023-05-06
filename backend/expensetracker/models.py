@@ -1,6 +1,7 @@
 from django.db import models
 
 # Create your models here.
+
 # very class represent table in database
 # every attribute represent column in table
 # every object represent row in table
