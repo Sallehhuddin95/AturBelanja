@@ -17,7 +17,7 @@ const monthsList: string[] = [
   "December",
 ];
 
-function MainScreen() {
+function ExpenseRecordsScreen() {
   const currentMonthIndex = new Date().getMonth();
   const currentMonth = monthsList[currentMonthIndex];
 
@@ -95,4 +95,4 @@ function MainScreen() {
   );
 }
 
-export default MainScreen;
+export default ExpenseRecordsScreen;

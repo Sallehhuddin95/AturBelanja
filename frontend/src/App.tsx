@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Footer, Header } from "./components";
-import { MainScreen } from "./screens";
-import { Container } from "react-bootstrap";
+import { ExpenseRecordsScreen, HomeScreen } from "./screens";
 
 function App() {
   return (
     <div className="bg-secondary bg-opacity-25 h-auto">
-      <Header />
-      <MainScreen />
-      <Footer />
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<HomeScreen />} />
+          <Route path="/expense-records" element={<ExpenseRecordsScreen />} />
+        </Routes>
+        <Footer />
+      </Router>
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Table, Row, Col, Button } from "react-bootstrap";
-import { dummyExpenses } from "../assets/dummyData";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import Axios from "axios";
 
@@ -32,20 +31,14 @@ interface expenseRecord {
 function ExpensesTable(props: any) {
   const [expenses, setExpenses] = useState<expenseRecord[]>([]);
   const { selectedMonth, selectedYear } = props;
-  const currentDay = new Date().getDate();
+  const monthNumber = monthsList.indexOf(selectedMonth);
+  const date = new Date(selectedYear, monthNumber + 1, 0);
 
-  const numberOfDaysInMonth = (year: number, monthName: string): number => {
-    // Create a new date object with the year and month
-    const monthNumber = monthsList.indexOf(monthName);
-    const date = new Date(year, monthNumber + 1, 0);
-
-    // Return the number of days in the month
-    return date.getDate();
-  };
-
-  const daysInMonth = numberOfDaysInMonth(selectedYear, selectedMonth);
-
+  // get number of days in month
+  const daysInMonth = date.getDate();
   const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+  const currentDay = new Date().getDate();
 
   const handleEdit = (id: string) => {
     console.log("Edit id: ", id);
@@ -56,15 +49,22 @@ function ExpensesTable(props: any) {
   };
 
   useEffect(() => {
-    Axios.get<expenseRecord[]>("http://127.0.0.1:8000/api/expense-records")
-      .then((response) => {
+    const fetchExpenses = async () => {
+      try {
+        const response = await Axios.get<expenseRecord[]>(
+          `http://127.0.0.1:8000/api/expense-records?month=${
+            monthNumber + 1
+          }&year=${selectedYear}`
+        );
         console.log(response.data[0]);
         setExpenses(response.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log(error);
-      });
-  }, []);
+      }
+    };
+
+    fetchExpenses();
+  }, [monthNumber, selectedYear]);
 
   return (
     <>
