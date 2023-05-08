@@ -92,28 +92,29 @@ function ExpensesTable(props: any) {
                 </tr>
               </thead>
               <tbody>
-                {expenses.map((expense, index) => (
-                  <tr key={expense.id}>
-                    <td>{index + 1}</td>
-                    <td>{expense.detail}</td>
-                    <td>{expense.category}</td>
-                    <td>{expense.price}</td>
-                    <td>{expense.payment}</td>
-                    <td>{expense.note}</td>
-                    <td className="d-flex justify-content-center">
-                      {" "}
-                      <Button
-                        className="me-2"
-                        onClick={() => handleEdit(expense.id)}
-                      >
-                        <FaEdit />
-                      </Button>
-                      <Button onClick={() => handleDelete(expense.id)}>
-                        <FaTrashAlt />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
+                {expenses
+                  .filter((expense) => new Date(expense.date).getDate() === day)
+                  .map((expense, index) => (
+                    <tr key={expense.id}>
+                      <td>{index + 1}</td>
+                      <td>{expense.detail}</td>
+                      <td>{expense.category}</td>
+                      <td>{expense.price}</td>
+                      <td>{expense.payment}</td>
+                      <td>{expense.note}</td>
+                      <td className="d-flex justify-content-center">
+                        <Button
+                          className="me-2"
+                          onClick={() => handleEdit(expense.id)}
+                        >
+                          <FaEdit />
+                        </Button>
+                        <Button onClick={() => handleDelete(expense.id)}>
+                          <FaTrashAlt />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </Table>
           </Row>
