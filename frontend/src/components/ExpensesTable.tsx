@@ -52,7 +52,7 @@ function ExpensesTable(props: any) {
     const fetchExpenses = async () => {
       try {
         const response = await Axios.get<expenseRecord[]>(
-          `http://127.0.0.1:8000/api/expense-records?month=${
+          `http://127.0.0.1:8000/api/expense?month=${
             monthNumber + 1
           }&year=${selectedYear}`
         );
