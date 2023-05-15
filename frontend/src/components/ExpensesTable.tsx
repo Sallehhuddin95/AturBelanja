@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Table, Row, Col, Button } from "react-bootstrap";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import Axios from "axios";
+import { useAppDispatch, useAppSelector } from "../app/hook";
+import { getExpenses } from "../features/expense/expenseSlice";
 
 const monthsList: string[] = [
   "January",
@@ -29,7 +31,10 @@ interface expenseRecord {
 }
 
 function ExpensesTable(props: any) {
-  const [expenses, setExpenses] = useState<expenseRecord[]>([]);
+  const dispatch = useAppDispatch();
+  const { monthlyExpenses } = useAppSelector((state) => state.expense);
+
+  // const [expenses, setExpenses] = useState<expenseRecord[]>([]);
   const { selectedMonth, selectedYear } = props;
   const monthNumber = monthsList.indexOf(selectedMonth);
   const date = new Date(selectedYear, monthNumber + 1, 0);
@@ -51,20 +56,14 @@ function ExpensesTable(props: any) {
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        const response = await Axios.get<expenseRecord[]>(
-          `http://127.0.0.1:8000/api/expense?month=${
-            monthNumber + 1
-          }&year=${selectedYear}`
-        );
-        console.log(response.data[0]);
-        setExpenses(response.data);
+        dispatch(getExpenses({ month: monthNumber + 1, year: selectedYear }));
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchExpenses();
-  }, [monthNumber, selectedYear]);
+  }, [monthNumber, selectedYear, dispatch]);
 
   return (
     <>
@@ -92,7 +91,7 @@ function ExpensesTable(props: any) {
                 </tr>
               </thead>
               <tbody>
-                {expenses
+                {monthlyExpenses.expenses
                   .filter((expense) => new Date(expense.date).getDate() === day)
                   .map((expense, index) => (
                     <tr key={expense.id}>
