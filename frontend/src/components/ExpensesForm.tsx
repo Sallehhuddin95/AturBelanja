@@ -1,32 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { expenseCategories, paymentMethods } from "../assets/dummyData";
+import { useAppDispatch, useAppSelector } from "../app/hook";
+import { useNavigate } from "react-router-dom";
+import { addExpense } from "../features/expense/expenseSlice";
 
-function ExpensesForm() {
+function ExpensesForm(props: any) {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { addedExpense } = useAppSelector((state) => state.expense);
+  const { action } = props;
   const [show, setShow] = useState(false);
   const [formData, setFormData] = useState({
     expDate: new Date().toISOString().substring(0, 10),
-    details: "",
+    detail: "",
     category: expenseCategories[0],
+    note: "",
     price: "",
     paymentMethod: paymentMethods[0],
   });
 
-  const { expDate, details, category, price, paymentMethod } = formData;
+  const [formTitle, setFormTitle] = useState<string>("");
+
+  const { expDate, detail, category, note, price, paymentMethod } = formData;
 
   const handleClose = () => {
     setShow(false);
     setFormData({
       expDate: new Date().toISOString().substring(0, 10),
-      details: "",
+      detail: "",
       category: expenseCategories[0],
+      note: "",
       price: "",
       paymentMethod: paymentMethods[0],
     });
+
+    // Refresh the page
+    window.location.reload();
   };
   const handleShow = () => setShow(true);
-  const handleAdd = () => {
-    console.log("Add button clicked");
+  const handleAdd = (e: any) => {
+    e.preventDefault();
+    // console.log("Add button clicked");
+    const formattedPrice = parseFloat(price).toFixed(2);
+    dispatch(
+      addExpense({
+        date: expDate,
+        detail,
+        category,
+        note,
+        price: formattedPrice,
+        payment: paymentMethod,
+      })
+    );
+
     handleClose();
   };
 
@@ -39,6 +66,20 @@ function ExpensesForm() {
     // console.log(formData);
   };
 
+  useEffect(() => {
+    switch (action) {
+      case "add":
+        setFormTitle("Add New Expense");
+        break;
+      case "edit":
+        setFormTitle("Edit Expense");
+        break;
+      default:
+        setFormTitle("Add New Expense");
+        break;
+    }
+  }, [action]);
+
   return (
     <div>
       {" "}
@@ -47,7 +88,7 @@ function ExpensesForm() {
       </Button>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add your new expense</Modal.Title>
+          <Modal.Title>{formTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -62,13 +103,13 @@ function ExpensesForm() {
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="expenseDetails">
-              <Form.Label>Details</Form.Label>
+              <Form.Label>Detail</Form.Label>
               <Form.Control
                 type="text"
-                name="details"
-                placeholder="Enter details"
+                name="detail"
+                placeholder="Enter detail"
                 onChange={handleChange}
-                value={details}
+                value={detail}
               />
             </Form.Group>
 
@@ -115,6 +156,16 @@ function ExpensesForm() {
                   </option>
                 ))}
               </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="expenseNote">
+              <Form.Label>Note</Form.Label>
+              <Form.Control
+                type="text"
+                name="note"
+                placeholder="Enter note"
+                onChange={handleChange}
+                value={note}
+              />
             </Form.Group>
           </Form>
         </Modal.Body>

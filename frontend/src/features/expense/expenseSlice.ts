@@ -20,11 +20,25 @@ type ExpenseState = {
     isSuccess: boolean;
     errorMessage: string;
   };
+  addedExpense: {
+    expense: Expense[];
+    isLoading: boolean;
+    isErrored: boolean;
+    isSuccess: boolean;
+    errorMessage: string;
+  };
 };
 
 const initialState: ExpenseState = {
   monthlyExpenses: {
     expenses: [],
+    isLoading: false,
+    isErrored: false,
+    isSuccess: false,
+    errorMessage: "",
+  },
+  addedExpense: {
+    expense: [],
     isLoading: false,
     isErrored: false,
     isSuccess: false,
@@ -39,6 +53,24 @@ export const getExpenses = createAsyncThunk(
       console.log("data", data);
 
       return await expenseService.getExpenses(data);
+    } catch (error: Error | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const addExpense = createAsyncThunk(
+  "expense/addExpense",
+  async (data: any, thunkAPI) => {
+    try {
+      console.log("data", data);
+      return await expenseService.addExpense(data);
     } catch (error: Error | any) {
       const message =
         (error.response &&
@@ -71,6 +103,19 @@ export const expenseSlice = createSlice({
         state.monthlyExpenses.isLoading = false;
         state.monthlyExpenses.isErrored = true;
         state.monthlyExpenses.errorMessage = "Error fetching expenses";
+      })
+      .addCase(addExpense.pending, (state, action) => {
+        state.addedExpense.isLoading = true;
+      })
+      .addCase(addExpense.fulfilled, (state, action) => {
+        state.addedExpense.isLoading = false;
+        state.addedExpense.isSuccess = true;
+        state.addedExpense.expense = action.payload;
+      })
+      .addCase(addExpense.rejected, (state, action) => {
+        state.addedExpense.isLoading = false;
+        state.addedExpense.isErrored = true;
+        state.addedExpense.errorMessage = "Error adding expense";
       });
   },
 });
