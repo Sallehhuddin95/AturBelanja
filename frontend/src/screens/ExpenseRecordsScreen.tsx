@@ -50,7 +50,7 @@ function ExpenseRecordsScreen() {
       <Row className="my-2">
         <Col md={2}>
           {" "}
-          <ExpensesForm />
+          <ExpensesForm action="add" />
         </Col>
         <Col>
           {" "}

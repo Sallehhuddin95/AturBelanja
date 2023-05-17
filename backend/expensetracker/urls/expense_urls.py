@@ -5,4 +5,5 @@ from ..views import expense_views as views
 urlpatterns = [
     # path('', views.getExpenses, name='expense-records'),
     path('', views.getExpensesByMonthAndYear, name='expense-month-year'),
+    path('add/', views.addExpense, name='expense-add'),
     ]
