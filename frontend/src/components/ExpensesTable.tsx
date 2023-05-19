@@ -37,6 +37,9 @@ function ExpensesTable(props: any) {
   const [openConfirmationDialog, setOpenConfirmationDialog] =
     useState<boolean>(false);
   const [selectedExpenseId, setSelectedExpenseId] = useState<string>("");
+  const [totalExpenses, setTotalExpenses] = useState<{ [key: number]: number }>(
+    {}
+  );
 
   // const [expenses, setExpenses] = useState<expenseRecord[]>([]);
   const { selectedMonth, selectedYear } = props;
@@ -72,6 +75,28 @@ function ExpensesTable(props: any) {
     fetchExpenses();
   }, [monthNumber, selectedYear, dispatch]);
 
+  useEffect(() => {
+    // Calculate total expense for each day
+    const calculateTotalExpenses = (day: number) => {
+      const expensesForDay = monthlyExpenses.expenses.filter(
+        (expense: expenseRecord) => new Date(expense.date).getDate() === day
+      );
+      const total = expensesForDay.reduce(
+        (sum: number, expense: expenseRecord) => sum + expense.price,
+        0
+      );
+      return total.toFixed(2);
+    };
+
+    // Calculate total expenses for all days
+    const totalExpensesByDay: { [key: number]: number } = {};
+    daysArray.forEach((day) => {
+      totalExpensesByDay[day] = parseFloat(calculateTotalExpenses(day));
+    });
+
+    setTotalExpenses(totalExpensesByDay);
+  }, [monthlyExpenses.expenses, daysArray]);
+
   return (
     <>
       <ExpensesForm action="delete" />
@@ -83,7 +108,8 @@ function ExpensesTable(props: any) {
                 Date: {day} {selectedMonth} {selectedYear}
               </strong>
             </Col>{" "}
-            <Col>Total Daily Income: </Col> <Col>Total Daily Spending: </Col>
+            <Col>Total Daily Income: </Col>{" "}
+            <Col>Total Daily Spending: RM {totalExpenses[day]} </Col>
           </Row>
           <Row>
             <Table striped bordered hover size="sm">
