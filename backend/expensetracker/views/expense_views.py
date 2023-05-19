@@ -48,3 +48,18 @@ def deleteExpense(request, pk):
     expense = DailyExpense.objects.get(id=pk)
     expense.delete()
     return Response('Expense Deleted')
+
+
+@api_view(['PUT'])
+def updateExpense(request, pk):
+    data = request.data
+    expense = DailyExpense.objects.get(id=pk)
+    expense.date = data['date']
+    expense.detail = data['detail']
+    expense.category = data['category']
+    expense.note = data['note']
+    expense.price = data['price']
+    expense.payment = data['payment']
+    expense.save()
+    serializer = DailyExpenseSerializer(expense, many=False)
+    return Response(serializer.data)

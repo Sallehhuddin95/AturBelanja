@@ -7,4 +7,5 @@ urlpatterns = [
     path('', views.getExpensesByMonthAndYear, name='expense-month-year'),
     path('add/', views.addExpense, name='expense-add'),
     path('delete/<str:pk>/', views.deleteExpense, name='expense-delete'),
+    path('update/<str:pk>/', views.updateExpense, name='expense-update'),
 ]

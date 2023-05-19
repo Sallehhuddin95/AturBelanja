@@ -50,6 +50,7 @@ function ExpensesTable(props: any) {
   const currentDay = new Date().getDate();
 
   const handleEdit = (id: string) => {
+    setSelectedExpenseId(id);
     setOpenExpenseForm(true);
   };
 
@@ -131,6 +132,9 @@ function ExpensesTable(props: any) {
       {openExpenseForm && (
         <ExpensesForm
           action="edit"
+          expense={monthlyExpenses.expenses.find(
+            (expense) => expense.id === selectedExpenseId
+          )}
           show={openExpenseForm}
           onHide={() => setOpenExpenseForm(false)}
         />
