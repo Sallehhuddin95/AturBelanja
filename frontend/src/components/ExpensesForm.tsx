@@ -3,13 +3,13 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { expenseCategories, paymentMethods } from "../assets/dummyData";
 import { useAppDispatch, useAppSelector } from "../app/hook";
 import { useNavigate } from "react-router-dom";
-import { addExpense } from "../features/expense/expenseSlice";
+import { addExpense, editExpense } from "../features/expense/expenseSlice";
 
 function ExpensesForm(props: any) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { addedExpense } = useAppSelector((state) => state.expense);
-  const { action } = props;
+  const { action, expense } = props;
   const [formData, setFormData] = useState({
     expDate: new Date().toISOString().substring(0, 10),
     detail: "",
@@ -20,6 +20,7 @@ function ExpensesForm(props: any) {
   });
 
   const [formTitle, setFormTitle] = useState<string>("");
+  const [buttonTitle, setButtonTitle] = useState<string>("");
 
   const { expDate, detail, category, note, price, paymentMethod } = formData;
 
@@ -41,16 +42,28 @@ function ExpensesForm(props: any) {
     e.preventDefault();
     // console.log("Add button clicked");
     const formattedPrice = parseFloat(price).toFixed(2);
-    dispatch(
-      addExpense({
-        date: expDate,
-        detail,
-        category,
-        note,
-        price: formattedPrice,
-        payment: paymentMethod,
-      })
-    );
+    action === "add"
+      ? dispatch(
+          addExpense({
+            date: expDate,
+            detail,
+            category,
+            note,
+            price: formattedPrice,
+            payment: paymentMethod,
+          })
+        )
+      : dispatch(
+          editExpense({
+            id: expense.id,
+            date: expDate,
+            detail,
+            category,
+            note,
+            price: formattedPrice,
+            payment: paymentMethod,
+          })
+        );
 
     handleClose();
   };
@@ -68,12 +81,23 @@ function ExpensesForm(props: any) {
     switch (action) {
       case "add":
         setFormTitle("Add New Expense");
+        setButtonTitle("Add");
         break;
       case "edit":
         setFormTitle("Edit Expense");
+        setButtonTitle("Edit");
+        setFormData({
+          expDate: expense.date,
+          detail: expense.detail,
+          category: expense.category,
+          note: expense.note,
+          price: expense.price.toString(),
+          paymentMethod: expense.payment,
+        });
         break;
       default:
         setFormTitle("Add New Expense");
+        setButtonTitle("Add");
         break;
     }
   }, [action]);
@@ -169,7 +193,7 @@ function ExpensesForm(props: any) {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={handleAdd}>
-            Add
+            {buttonTitle}
           </Button>
           <Button variant="secondary" onClick={handleClose}>
             Cancel

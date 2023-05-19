@@ -34,6 +34,13 @@ type ExpenseState = {
     isSuccess: boolean;
     errorMessage: string;
   };
+  editedExpense: {
+    expense: Expense[];
+    isLoading: boolean;
+    isErrored: boolean;
+    isSuccess: boolean;
+    errorMessage: string;
+  };
 };
 
 const initialState: ExpenseState = {
@@ -52,6 +59,13 @@ const initialState: ExpenseState = {
     errorMessage: "",
   },
   deletedExpense: {
+    expense: [],
+    isLoading: false,
+    isErrored: false,
+    isSuccess: false,
+    errorMessage: "",
+  },
+  editedExpense: {
     expense: [],
     isLoading: false,
     isErrored: false,
@@ -111,6 +125,23 @@ export const deleteExpense = createAsyncThunk(
   }
 );
 
+export const editExpense = createAsyncThunk(
+  "expense/editExpense",
+  async (data: any, thunkAPI) => {
+    try {
+      return await expenseService.editExpense(data);
+    } catch (error: Error | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const expenseSlice = createSlice({
   name: "expense",
   initialState,
@@ -151,11 +182,26 @@ export const expenseSlice = createSlice({
       .addCase(deleteExpense.fulfilled, (state, action) => {
         state.deletedExpense.isLoading = false;
         state.deletedExpense.isSuccess = true;
+        state.deletedExpense.expense = action.payload;
       })
       .addCase(deleteExpense.rejected, (state, action) => {
         state.deletedExpense.isLoading = false;
         state.deletedExpense.isErrored = true;
         state.deletedExpense.errorMessage = "Error deleting expense";
+      })
+      .addCase(editExpense.pending, (state, action) => {
+        state.editedExpense.isLoading = true;
+      })
+      .addCase(editExpense.fulfilled, (state, action) => {
+        state.editedExpense.isLoading = false;
+        state.editedExpense.isSuccess = true;
+        state.editedExpense.expense = action.payload;
+      })
+
+      .addCase(editExpense.rejected, (state, action) => {
+        state.editedExpense.isLoading = false;
+        state.editedExpense.isErrored = true;
+        state.editedExpense.errorMessage = "Error editing expense";
       });
   },
 });

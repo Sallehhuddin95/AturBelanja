@@ -22,10 +22,16 @@ const deleteExpense = async (data: any) => {
   return response.data;
 };
 
+const editExpense = async (data: any) => {
+  const response = await axios.put(`${API_URL}update/${data.id}/`, data);
+  return response.data;
+};
+
 const expenseService = {
   getExpenses,
   addExpense,
   deleteExpense,
+  editExpense,
 };
 
 export default expenseService;
