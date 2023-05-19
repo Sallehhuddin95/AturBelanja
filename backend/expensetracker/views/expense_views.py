@@ -41,3 +41,10 @@ def addExpense(request):
 
     serializer = DailyExpenseSerializer(expense, many=False)
     return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+def deleteExpense(request, pk):
+    expense = DailyExpense.objects.get(id=pk)
+    expense.delete()
+    return Response('Expense Deleted')

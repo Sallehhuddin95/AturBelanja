@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Row, Col, Button } from "react-bootstrap";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import Axios from "axios";
+import { ExpensesForm, ConfirmationDialog } from ".";
 import { useAppDispatch, useAppSelector } from "../app/hook";
 import { getExpenses } from "../features/expense/expenseSlice";
 
@@ -33,6 +33,10 @@ interface expenseRecord {
 function ExpensesTable(props: any) {
   const dispatch = useAppDispatch();
   const { monthlyExpenses } = useAppSelector((state) => state.expense);
+  const [openExpenseForm, setOpenExpenseForm] = useState<boolean>(false);
+  const [openConfirmationDialog, setOpenConfirmationDialog] =
+    useState<boolean>(false);
+  const [selectedExpenseId, setSelectedExpenseId] = useState<string>("");
 
   // const [expenses, setExpenses] = useState<expenseRecord[]>([]);
   const { selectedMonth, selectedYear } = props;
@@ -46,11 +50,13 @@ function ExpensesTable(props: any) {
   const currentDay = new Date().getDate();
 
   const handleEdit = (id: string) => {
-    console.log("Edit id: ", id);
+    setOpenExpenseForm(true);
   };
 
   const handleDelete = (id: string) => {
     console.log("Delete id: ", id);
+    setSelectedExpenseId(id);
+    setOpenConfirmationDialog(true);
   };
 
   useEffect(() => {
@@ -67,6 +73,7 @@ function ExpensesTable(props: any) {
 
   return (
     <>
+      <ExpensesForm action="delete" />
       {daysArray.map((day) => (
         <div key={day} className="my-3">
           <Row className="my-3">
@@ -108,6 +115,7 @@ function ExpensesTable(props: any) {
                         >
                           <FaEdit />
                         </Button>
+
                         <Button onClick={() => handleDelete(expense.id)}>
                           <FaTrashAlt />
                         </Button>
@@ -119,6 +127,23 @@ function ExpensesTable(props: any) {
           </Row>
         </div>
       ))}
+
+      {openExpenseForm && (
+        <ExpensesForm
+          action="edit"
+          show={openExpenseForm}
+          onHide={() => setOpenExpenseForm(false)}
+        />
+      )}
+
+      {openConfirmationDialog && (
+        <ConfirmationDialog
+          action="delete"
+          id={selectedExpenseId}
+          show={openConfirmationDialog}
+          onHide={() => setOpenConfirmationDialog(false)}
+        />
+      )}
     </>
   );
 }
