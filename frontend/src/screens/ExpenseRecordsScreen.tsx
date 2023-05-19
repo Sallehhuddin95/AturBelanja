@@ -31,6 +31,7 @@ function ExpenseRecordsScreen() {
 
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth);
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const [openExpenseForm, setOpenExpenseForm] = useState<boolean>(false);
 
   const handleMonthChange = (e: any) => {
     e.preventDefault();
@@ -42,6 +43,10 @@ function ExpenseRecordsScreen() {
     setSelectedYear(e.target.value);
   };
 
+  const handleFormOpen = () => {
+    setOpenExpenseForm(true);
+  };
+
   return (
     <Container className="d-flex flex-column py-3">
       <Row className="">
@@ -50,7 +55,12 @@ function ExpenseRecordsScreen() {
       <Row className="my-2">
         <Col md={2}>
           {" "}
-          <ExpensesForm action="add" />
+          <Button onClick={handleFormOpen}>Add New</Button>
+          <ExpensesForm
+            action="add"
+            show={openExpenseForm}
+            onHide={() => setOpenExpenseForm(false)}
+          />
         </Col>
         <Col>
           {" "}

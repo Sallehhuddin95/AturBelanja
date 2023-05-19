@@ -27,6 +27,13 @@ type ExpenseState = {
     isSuccess: boolean;
     errorMessage: string;
   };
+  deletedExpense: {
+    expense: Expense[];
+    isLoading: boolean;
+    isErrored: boolean;
+    isSuccess: boolean;
+    errorMessage: string;
+  };
 };
 
 const initialState: ExpenseState = {
@@ -44,14 +51,19 @@ const initialState: ExpenseState = {
     isSuccess: false,
     errorMessage: "",
   },
+  deletedExpense: {
+    expense: [],
+    isLoading: false,
+    isErrored: false,
+    isSuccess: false,
+    errorMessage: "",
+  },
 };
 
 export const getExpenses = createAsyncThunk(
   "expense/getExpenses",
   async (data: any, thunkAPI) => {
     try {
-      console.log("data", data);
-
       return await expenseService.getExpenses(data);
     } catch (error: Error | any) {
       const message =
@@ -69,8 +81,24 @@ export const addExpense = createAsyncThunk(
   "expense/addExpense",
   async (data: any, thunkAPI) => {
     try {
-      console.log("data", data);
       return await expenseService.addExpense(data);
+    } catch (error: Error | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const deleteExpense = createAsyncThunk(
+  "expense/deleteExpense",
+  async (data: any, thunkAPI) => {
+    try {
+      return await expenseService.deleteExpense(data);
     } catch (error: Error | any) {
       const message =
         (error.response &&
@@ -116,6 +144,18 @@ export const expenseSlice = createSlice({
         state.addedExpense.isLoading = false;
         state.addedExpense.isErrored = true;
         state.addedExpense.errorMessage = "Error adding expense";
+      })
+      .addCase(deleteExpense.pending, (state, action) => {
+        state.deletedExpense.isLoading = true;
+      })
+      .addCase(deleteExpense.fulfilled, (state, action) => {
+        state.deletedExpense.isLoading = false;
+        state.deletedExpense.isSuccess = true;
+      })
+      .addCase(deleteExpense.rejected, (state, action) => {
+        state.deletedExpense.isLoading = false;
+        state.deletedExpense.isErrored = true;
+        state.deletedExpense.errorMessage = "Error deleting expense";
       });
   },
 });

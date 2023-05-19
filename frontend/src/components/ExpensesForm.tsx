@@ -10,7 +10,6 @@ function ExpensesForm(props: any) {
   const navigate = useNavigate();
   const { addedExpense } = useAppSelector((state) => state.expense);
   const { action } = props;
-  const [show, setShow] = useState(false);
   const [formData, setFormData] = useState({
     expDate: new Date().toISOString().substring(0, 10),
     detail: "",
@@ -25,7 +24,6 @@ function ExpensesForm(props: any) {
   const { expDate, detail, category, note, price, paymentMethod } = formData;
 
   const handleClose = () => {
-    setShow(false);
     setFormData({
       expDate: new Date().toISOString().substring(0, 10),
       detail: "",
@@ -38,7 +36,7 @@ function ExpensesForm(props: any) {
     // Refresh the page
     window.location.reload();
   };
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
   const handleAdd = (e: any) => {
     e.preventDefault();
     // console.log("Add button clicked");
@@ -83,10 +81,10 @@ function ExpensesForm(props: any) {
   return (
     <div>
       {" "}
-      <Button variant="outline-dark" size="sm" onClick={handleShow}>
+      {/* <Button variant="outline-dark" size="sm" onClick={handleShow}>
         Add New
-      </Button>
-      <Modal show={show} onHide={handleClose}>
+      </Button> */}
+      <Modal {...props}>
         <Modal.Header closeButton>
           <Modal.Title>{formTitle}</Modal.Title>
         </Modal.Header>
