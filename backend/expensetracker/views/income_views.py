@@ -39,3 +39,10 @@ def updateIncome(request, pk):
     income.payment = data['payment']
     income.save()
     return Response('Income Updated')
+
+
+@api_view(['DELETE'])
+def deleteIncome(request, pk):
+    income = DailyIncome.objects.get(id=pk)
+    income.delete()
+    return Response('Income Deleted')

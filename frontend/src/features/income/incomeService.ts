@@ -21,10 +21,16 @@ const editIncome = async (data: any) => {
   return response.data;
 };
 
+const deleteIncome = async (data: any) => {
+  const response = await axios.delete(`${API_URL}delete/${data.id}/`);
+  return response.data;
+};
+
 const incomeService = {
   getIncomes,
   addIncome,
   editIncome,
+  deleteIncome,
 };
 
 export default incomeService;

@@ -33,6 +33,13 @@ type IncomeState = {
     isSuccess: boolean;
     errorMessage: string;
   };
+  deletedIncome: {
+    income: Income[];
+    isLoading: boolean;
+    isErrored: boolean;
+    isSuccess: boolean;
+    errorMessage: string;
+  };
 };
 
 const initialState: IncomeState = {
@@ -51,6 +58,13 @@ const initialState: IncomeState = {
     errorMessage: "",
   },
   editedIncome: {
+    income: [],
+    isLoading: false,
+    isErrored: false,
+    isSuccess: false,
+    errorMessage: "",
+  },
+  deletedIncome: {
     income: [],
     isLoading: false,
     isErrored: false,
@@ -110,6 +124,23 @@ export const editIncome = createAsyncThunk(
   }
 );
 
+export const deleteIncome = createAsyncThunk(
+  "income/deleteIncome",
+  async (data: any, thunkAPI) => {
+    try {
+      return await incomeService.deleteIncome(data);
+    } catch (error: Error | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const incomeSlice = createSlice({
   name: "income",
   initialState,
@@ -155,6 +186,19 @@ const incomeSlice = createSlice({
       state.editedIncome.isLoading = false;
       state.editedIncome.isErrored = true;
       state.editedIncome.errorMessage = "Error editing income";
+    });
+    builder.addCase(deleteIncome.pending, (state) => {
+      state.deletedIncome.isLoading = true;
+    });
+    builder.addCase(deleteIncome.fulfilled, (state, action) => {
+      state.deletedIncome.isLoading = false;
+      state.deletedIncome.isSuccess = true;
+      state.deletedIncome.income = action.payload;
+    });
+    builder.addCase(deleteIncome.rejected, (state, action) => {
+      state.deletedIncome.isLoading = false;
+      state.deletedIncome.isErrored = true;
+      state.deletedIncome.errorMessage = "Error deleting income";
     });
   },
 });
