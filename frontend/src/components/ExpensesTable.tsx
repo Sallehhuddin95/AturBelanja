@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Table, Row, Col, Button } from "react-bootstrap";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { ExpensesForm, ConfirmationDialog } from ".";
@@ -75,8 +75,9 @@ function ExpensesTable(props: any) {
     fetchExpenses();
   }, [monthNumber, selectedYear, dispatch]);
 
+  const previousTotalExpensesRef = useRef({});
+
   useEffect(() => {
-    // Calculate total expense for each day
     const calculateTotalExpenses = (day: number) => {
       const expensesForDay = monthlyExpenses.expenses.filter(
         (expense: expenseRecord) => new Date(expense.date).getDate() === day
@@ -88,13 +89,20 @@ function ExpensesTable(props: any) {
       return total.toFixed(2);
     };
 
-    // Calculate total expenses for all days
     const totalExpensesByDay: { [key: number]: number } = {};
     daysArray.forEach((day) => {
       totalExpensesByDay[day] = parseFloat(calculateTotalExpenses(day));
     });
 
-    setTotalExpenses(totalExpensesByDay);
+    const previousTotalExpenses = previousTotalExpensesRef.current;
+
+    if (
+      JSON.stringify(previousTotalExpenses) !==
+      JSON.stringify(totalExpensesByDay)
+    ) {
+      setTotalExpenses(totalExpensesByDay);
+      previousTotalExpensesRef.current = totalExpensesByDay;
+    }
   }, [monthlyExpenses.expenses, daysArray]);
 
   return (
