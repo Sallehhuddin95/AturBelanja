@@ -6,6 +6,7 @@ from django.db import models
 # every attribute represent column in table
 # every object represent row in table
 
+
 class DailyExpense(models.Model):
     date = models.DateField()
     detail = models.CharField(max_length=100)
@@ -16,3 +17,14 @@ class DailyExpense(models.Model):
 
     def __str__(self):
         return self.detail[0:50]
+
+
+class DailyIncome(models.Model):
+    date = models.DateField()
+    amount = models.FloatField()
+    category = models.CharField(max_length=100)
+    payment = models.CharField(max_length=100)
+    note = models.TextField()
+
+    def __str__(self):
+        return self.note[0:50]

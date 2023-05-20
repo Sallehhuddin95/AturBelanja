@@ -7,6 +7,14 @@ export const paymentMethods: string[] = [
   "Venmo",
 ];
 
+// Define an array of income payment methods
+export const incomePaymentMethods: string[] = [
+  "Account Transfer",
+  "E-Wallet",
+  "Cash",
+  "Others",
+];
+
 // Define an array of expense categories
 export const expenseCategories: string[] = [
   "Food",
@@ -16,6 +24,16 @@ export const expenseCategories: string[] = [
   "Entertainment",
   "Healthcare",
   "Education",
+];
+
+// Define an array of income categories
+export const incomeCategories: string[] = [
+  "Salary",
+  "Bonus",
+  "Allowance",
+  "Side Hustle",
+  "Petty Cash",
+  "Others",
 ];
 
 interface Expense {

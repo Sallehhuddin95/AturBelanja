@@ -18,11 +18,8 @@ def getExpenses(request):
 def getExpensesByMonthAndYear(request):
     month = request.GET.get('month')
     year = request.GET.get('year')
-    print(f"Year: {year}")
-    print(f"Month: {month}")
     dailyExpense = DailyExpense.objects.filter(
         date__month=month, date__year=year)
-    print(month, year)
     serializer = DailyExpenseSerializer(dailyExpense, many=True)
     return Response(serializer.data)
 

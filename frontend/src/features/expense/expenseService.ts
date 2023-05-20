@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "/api/expense/";
+const API_URL = "/api/expense-records/";
 
 const getExpenses = async (data: any) => {
   const response = await axios.get(API_URL, {
