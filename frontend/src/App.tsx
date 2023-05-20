@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Footer, Header } from "./components";
-import { ExpenseRecordsScreen, HomeScreen } from "./screens";
+import { RecordsScreen, HomeScreen } from "./screens";
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<HomeScreen />} />
-          <Route path="/expense" element={<ExpenseRecordsScreen />} />
+          <Route path="/records" element={<RecordsScreen />} />
         </Routes>
         <Footer />
       </Router>
