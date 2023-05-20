@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Table, Row, Col, Button } from "react-bootstrap";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { IncomesForm, ConfirmationDialog } from ".";
@@ -32,15 +32,14 @@ interface incomeRecord {
 function IncomesTable(props: any) {
   const dispatch = useAppDispatch();
   const { monthlyIncomes } = useAppSelector((state) => state.income);
-  const [openExpenseForm, setOpenExpenseForm] = useState<boolean>(false);
+  const [openIncomeForm, setOpenIncomeForm] = useState<boolean>(false);
   const [openConfirmationDialog, setOpenConfirmationDialog] =
     useState<boolean>(false);
-  const [selectedExpenseId, setSelectedExpenseId] = useState<string>("");
+  const [selectedIncomeId, setSelectedIncomeId] = useState<string>("");
   const [totalIncomes, setTotalIncomes] = useState<{ [key: number]: number }>(
     {}
   );
 
-  // const [expenses, setExpenses] = useState<expenseRecord[]>([]);
   const { selectedMonth, selectedYear } = props;
   const monthNumber = monthsList.indexOf(selectedMonth);
   const date = new Date(selectedYear, monthNumber + 1, 0);
@@ -52,13 +51,13 @@ function IncomesTable(props: any) {
   const currentDay = new Date().getDate();
 
   const handleEdit = (id: string) => {
-    setSelectedExpenseId(id);
-    setOpenExpenseForm(true);
+    setSelectedIncomeId(id);
+    setOpenIncomeForm(true);
   };
 
   const handleDelete = (id: string) => {
     console.log("Delete id: ", id);
-    setSelectedExpenseId(id);
+    setSelectedIncomeId(id);
     setOpenConfirmationDialog(true);
   };
 
@@ -74,6 +73,7 @@ function IncomesTable(props: any) {
     fetchIncomes();
   }, [monthNumber, selectedYear, dispatch]);
 
+  const previousTotalIncomesRef = useRef({});
   useEffect(() => {
     // Calculate total income for each day
     const calculateTotalIncomes = (day: number) => {
@@ -93,7 +93,15 @@ function IncomesTable(props: any) {
       totalIncomesByDay[day] = parseFloat(calculateTotalIncomes(day));
     });
 
-    setTotalIncomes(totalIncomesByDay);
+    const previousTotalIncomes = previousTotalIncomesRef.current;
+
+    if (
+      JSON.stringify(previousTotalIncomes) !== JSON.stringify(totalIncomesByDay)
+    ) {
+      setTotalIncomes(totalIncomesByDay);
+      previousTotalIncomesRef.current = totalIncomesByDay;
+    }
+    // setTotalIncomes(totalIncomesByDay);
   }, [monthlyIncomes.incomes, daysArray]);
 
   return (
@@ -151,21 +159,21 @@ function IncomesTable(props: any) {
         </div>
       ))}
 
-      {openExpenseForm && (
+      {openIncomeForm && (
         <IncomesForm
           action="edit"
-          expense={monthlyIncomes.incomes.find(
-            (income) => income.id === selectedExpenseId
+          income={monthlyIncomes.incomes.find(
+            (income) => income.id === selectedIncomeId
           )}
-          show={openExpenseForm}
-          onHide={() => setOpenExpenseForm(false)}
+          show={openIncomeForm}
+          onHide={() => setOpenIncomeForm(false)}
         />
       )}
 
       {openConfirmationDialog && (
         <ConfirmationDialog
           action="delete"
-          id={selectedExpenseId}
+          id={selectedIncomeId}
           show={openConfirmationDialog}
           onHide={() => setOpenConfirmationDialog(false)}
         />

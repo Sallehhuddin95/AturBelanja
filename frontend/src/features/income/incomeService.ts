@@ -10,8 +10,21 @@ const getIncomes = async (data: any) => {
   return response.data;
 };
 
+const addIncome = async (data: any) => {
+  const response = await axios.post(`${API_URL}add`, data);
+
+  return response.data;
+};
+
+const editIncome = async (data: any) => {
+  const response = await axios.put(`${API_URL}update/${data.id}/`, data);
+  return response.data;
+};
+
 const incomeService = {
   getIncomes,
+  addIncome,
+  editIncome,
 };
 
 export default incomeService;

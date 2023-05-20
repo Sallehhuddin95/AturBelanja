@@ -2,65 +2,59 @@ import React, { useState, useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { incomeCategories, incomePaymentMethods } from "../assets/dummyData";
 import { useAppDispatch, useAppSelector } from "../app/hook";
-import { useNavigate } from "react-router-dom";
-import { addExpense, editExpense } from "../features/expense/expenseSlice";
+import { addIncome, editIncome } from "../features/income/incomeSlice";
 
 function IncomesForm(props: any) {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const { addedExpense } = useAppSelector((state) => state.expense);
-  const { action, expense } = props;
+  const { addedIncome } = useAppSelector((state) => state.income);
+  const { action, income } = props;
   const [formData, setFormData] = useState({
-    expDate: new Date().toISOString().substring(0, 10),
-    detail: "",
+    incDate: new Date().toISOString().substring(0, 10),
     category: incomeCategories[0],
     note: "",
-    price: "",
+    amount: "",
     paymentMethod: incomePaymentMethods[0],
   });
 
   const [formTitle, setFormTitle] = useState<string>("");
   const [buttonTitle, setButtonTitle] = useState<string>("");
 
-  const { expDate, detail, category, note, price, paymentMethod } = formData;
+  const { incDate, category, note, amount, paymentMethod } = formData;
 
   const handleClose = () => {
     setFormData({
-      expDate: new Date().toISOString().substring(0, 10),
-      detail: "",
+      incDate: new Date().toISOString().substring(0, 10),
       category: incomeCategories[0],
       note: "",
-      price: "",
+      amount: "",
       paymentMethod: incomePaymentMethods[0],
     });
 
     // Refresh the page
-    window.location.reload();
+    // window.location.reload();
   };
   // const handleShow = () => setShow(true);
   const handleAdd = (e: any) => {
     e.preventDefault();
     // console.log("Add button clicked");
-    const formattedPrice = parseFloat(price).toFixed(2);
+    const formattedPrice = parseFloat(amount).toFixed(2);
     action === "add"
       ? dispatch(
-          addExpense({
-            date: expDate,
-            detail,
+          addIncome({
+            date: incDate,
             category,
             note,
-            price: formattedPrice,
+            amount: formattedPrice,
             payment: paymentMethod,
           })
         )
       : dispatch(
-          editExpense({
-            id: expense.id,
-            date: expDate,
-            detail,
+          editIncome({
+            id: income.id,
+            date: incDate,
             category,
             note,
-            price: formattedPrice,
+            amount: formattedPrice,
             payment: paymentMethod,
           })
         );
@@ -87,20 +81,19 @@ function IncomesForm(props: any) {
         setFormTitle("Edit Income");
         setButtonTitle("Edit");
         setFormData({
-          expDate: expense.date,
-          detail: expense.detail,
-          category: expense.category,
-          note: expense.note,
-          price: expense.price.toString(),
-          paymentMethod: expense.payment,
+          incDate: income.date,
+          category: income.category,
+          note: income.note,
+          amount: income.amount.toString(),
+          paymentMethod: income.payment,
         });
         break;
       default:
-        setFormTitle("Add New Expense");
+        setFormTitle("Add New Income");
         setButtonTitle("Add");
         break;
     }
-  }, [action]);
+  }, [action, income]);
 
   return (
     <div>
@@ -114,18 +107,18 @@ function IncomesForm(props: any) {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3" controlId="expenseDate">
+            <Form.Group className="mb-3" controlId="incomeDate">
               <Form.Label>Date</Form.Label>
               <Form.Control
                 type="date"
-                name="expDate"
+                name="incDate"
                 placeholder="Enter date"
                 onChange={handleChange}
-                value={expDate}
+                value={incDate}
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="expenseCategory">
+            <Form.Group className="mb-3" controlId="incomeCategory">
               <Form.Label>Category</Form.Label>
               <Form.Select
                 id="category-select"
@@ -141,16 +134,16 @@ function IncomesForm(props: any) {
                 ))}
               </Form.Select>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="expensePrice">
-              <Form.Label>Price (RM)</Form.Label>
+            <Form.Group className="mb-3" controlId="incomeAmount">
+              <Form.Label>Amount (RM)</Form.Label>
               <Form.Control
                 type="number"
-                name="price"
-                placeholder="Price"
+                name="amount"
+                placeholder="Amount"
                 min="0"
                 pattern="[0-9]+"
                 onChange={handleChange}
-                value={price}
+                value={amount}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="paymentMethod">
@@ -169,7 +162,7 @@ function IncomesForm(props: any) {
                 ))}
               </Form.Select>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="expenseNote">
+            <Form.Group className="mb-3" controlId="incomeNote">
               <Form.Label>Note</Form.Label>
               <Form.Control
                 type="text"
