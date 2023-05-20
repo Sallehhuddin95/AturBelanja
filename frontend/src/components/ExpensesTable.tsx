@@ -178,6 +178,7 @@ function ExpensesTable(props: any) {
         <ConfirmationDialog
           action="delete"
           id={selectedExpenseId}
+          itemType="expense"
           show={openConfirmationDialog}
           onHide={() => setOpenConfirmationDialog(false)}
         />

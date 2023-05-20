@@ -174,6 +174,7 @@ function IncomesTable(props: any) {
         <ConfirmationDialog
           action="delete"
           id={selectedIncomeId}
+          itemType="income"
           show={openConfirmationDialog}
           onHide={() => setOpenConfirmationDialog(false)}
         />

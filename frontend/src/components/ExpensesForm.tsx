@@ -100,7 +100,7 @@ function ExpensesForm(props: any) {
         setButtonTitle("Add");
         break;
     }
-  }, [action]);
+  }, [action, expense]);
 
   return (
     <div>
