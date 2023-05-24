@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/expense-records/', include('expensetracker.urls.expense_urls')),  # new
     path('api/income-records/', include('expensetracker.urls.income_urls')),  # new
+    path('api/users/', include('expensetracker.urls.user_urls')),  # new
 ]
