@@ -3,22 +3,20 @@ import { FormContainer } from "../components";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hook";
-import { registerUser, reset } from "../features/user/userSlice";
+import { loginUser, reset } from "../features/user/userSlice";
 
-function RegisterScreen() {
+function LoginScreen() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { user, isError, isSuccess, message } = useAppSelector(
-    (state) => state.user.registerUser
+    (state) => state.user.loginUser
   );
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    username: "",
     password: "",
-    confirmPassword: "",
   });
 
-  const { name, email, password, confirmPassword } = formData;
+  const { username, password } = formData;
 
   const handleChange = (e: any) => {
     e.preventDefault();
@@ -32,37 +30,29 @@ function RegisterScreen() {
     console.log(formData);
     e.preventDefault();
     dispatch(reset());
-    dispatch(registerUser(formData));
+    dispatch(loginUser(formData));
   };
 
   useEffect(() => {
     if (isSuccess) {
       navigate("/records");
+      //save user to local storage
+      localStorage.setItem("user", JSON.stringify(user));
     }
-  }, [navigate, isSuccess]);
+  }, [isSuccess, navigate, user]);
 
   return (
     <FormContainer>
-      <h1>Register</h1>
+      <h1>Login</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="username" className="mb-3">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="text"
-            name="name"
-            placeholder="Enter name"
-            onChange={handleChange}
-            value={name}
-          />
-        </Form.Group>
-        <Form.Group controlId="email" className="mb-3">
           <Form.Label>Email Address</Form.Label>
           <Form.Control
             type="email"
-            name="email"
-            placeholder="Enter email"
+            name="username"
+            placeholder="Enter email or username"
             onChange={handleChange}
-            value={email}
+            value={username}
           />
         </Form.Group>
         <Form.Group controlId="password" className="mb-3">
@@ -75,27 +65,17 @@ function RegisterScreen() {
             value={password}
           />
         </Form.Group>
-        <Form.Group controlId="confirmPassword" className="mb-3">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm password"
-            onChange={handleChange}
-            value={confirmPassword}
-          />
-        </Form.Group>
         <Button type="submit" variant="primary">
-          Register
+          Login
         </Button>
       </Form>
       <Row className="py-3">
         <Col>
-          <Link to="/login">Already have an account? Login</Link>
+          <Link to="/register">Don't have an account? Register</Link>
         </Col>
       </Row>
     </FormContainer>
   );
 }
 
-export default RegisterScreen;
+export default LoginScreen;

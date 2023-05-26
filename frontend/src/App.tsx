@@ -1,6 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Footer, Header } from "./components";
-import { RecordsScreen, HomeScreen, RegisterScreen } from "./screens";
+import {
+  RecordsScreen,
+  HomeScreen,
+  RegisterScreen,
+  LoginScreen,
+} from "./screens";
 
 function App() {
   return (
@@ -11,6 +16,7 @@ function App() {
           <Route path="/" element={<HomeScreen />} />
           <Route path="/records" element={<RecordsScreen />} />
           <Route path="/register" element={<RegisterScreen />} />
+          <Route path="/login" element={<LoginScreen />} />
         </Routes>
         <Footer />
       </Router>
