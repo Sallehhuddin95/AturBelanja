@@ -23,10 +23,28 @@ type UserState = {
     isSuccess: boolean;
     message: string | null;
   };
+  loginUser: {
+    user: User | null;
+    users: Users | null;
+    isLoggedIn: boolean;
+    isError: boolean;
+    isLoading: boolean;
+    isSuccess: boolean;
+    message: string | null;
+  };
 };
 
 const initialState: UserState = {
   registerUser: {
+    user: null,
+    users: null,
+    isLoggedIn: false,
+    isError: false,
+    isLoading: false,
+    isSuccess: false,
+    message: null,
+  },
+  loginUser: {
     user: null,
     users: null,
     isLoggedIn: false,
@@ -42,6 +60,23 @@ export const registerUser = createAsyncThunk(
   async (formData: any, thunkAPI) => {
     try {
       return await userService.registerUser(formData);
+    } catch (error: Error | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const loginUser = createAsyncThunk(
+  "user/login",
+  async (formData: any, thunkAPI) => {
+    try {
+      return await userService.loginUser(formData);
     } catch (error: Error | any) {
       const message =
         (error.response &&
@@ -75,6 +110,20 @@ const userSlice = createSlice({
         state.registerUser.isLoading = false;
         state.registerUser.isError = true;
         state.registerUser.message = "Error: " + payload;
+      })
+      .addCase(loginUser.pending, (state) => {
+        state.loginUser.isLoading = true;
+      })
+      .addCase(loginUser.fulfilled, (state, { payload }) => {
+        state.loginUser.isLoading = false;
+        state.loginUser.isSuccess = true;
+        state.loginUser.user = payload;
+        state.loginUser.isLoggedIn = true;
+      })
+      .addCase(loginUser.rejected, (state, { payload }) => {
+        state.loginUser.isLoading = false;
+        state.loginUser.isError = true;
+        state.loginUser.message = "Error: " + payload;
       });
   },
 });
