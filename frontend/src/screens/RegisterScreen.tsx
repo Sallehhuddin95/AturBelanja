@@ -3,7 +3,7 @@ import { FormContainer } from "../components";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hook";
-import { registerUser, reset } from "../features/user/userSlice";
+import { registerUser } from "../features/user/userSlice";
 
 function RegisterScreen() {
   const dispatch = useAppDispatch();
@@ -31,7 +31,7 @@ function RegisterScreen() {
   const handleSubmit = (e: any) => {
     console.log(formData);
     e.preventDefault();
-    dispatch(reset());
+    // dispatch(reset());
     dispatch(registerUser(formData));
   };
 
