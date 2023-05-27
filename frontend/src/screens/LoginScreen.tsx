@@ -3,7 +3,7 @@ import { FormContainer } from "../components";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hook";
-import { loginUser, reset } from "../features/user/userSlice";
+import { loginUser, resetLogoutUser } from "../features/user/userSlice";
 
 function LoginScreen() {
   const dispatch = useAppDispatch();
@@ -29,17 +29,16 @@ function LoginScreen() {
   const handleSubmit = (e: any) => {
     console.log(formData);
     e.preventDefault();
-    dispatch(reset());
     dispatch(loginUser(formData));
   };
 
   useEffect(() => {
     if (isSuccess) {
       navigate("/records");
+      dispatch(resetLogoutUser());
       //save user to local storage
-      localStorage.setItem("user", JSON.stringify(user));
     }
-  }, [isSuccess, navigate, user]);
+  }, [isSuccess, navigate, dispatch]);
 
   return (
     <FormContainer>

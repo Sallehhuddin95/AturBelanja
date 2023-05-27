@@ -7,6 +7,7 @@ type User = {
   username: string;
   email: string;
   accessToken: string;
+  name: string;
 };
 
 type Users = {
@@ -32,6 +33,13 @@ type UserState = {
     isSuccess: boolean;
     message: string | null;
   };
+  logoutUser: {
+    isLoggedIn: boolean;
+    isError: boolean;
+    isLoading: boolean;
+    isSuccess: boolean;
+    message: string | null;
+  };
 };
 
 const initialState: UserState = {
@@ -47,6 +55,13 @@ const initialState: UserState = {
   loginUser: {
     user: null,
     users: null,
+    isLoggedIn: false,
+    isError: false,
+    isLoading: false,
+    isSuccess: false,
+    message: null,
+  },
+  logoutUser: {
     isLoggedIn: false,
     isError: false,
     isLoading: false,
@@ -89,11 +104,36 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk(
+  "user/logout",
+  async (formData: any, thunkAPI) => {
+    try {
+      return await userService.logoutUser(formData);
+    } catch (error: Error | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    reset: (state) => initialState,
+    resetLoginUser(state) {
+      state.loginUser = initialState.loginUser;
+    },
+    resetRegisterUser(state) {
+      state.registerUser = initialState.registerUser;
+    },
+    resetLogoutUser(state) {
+      state.logoutUser = initialState.logoutUser;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -124,10 +164,24 @@ const userSlice = createSlice({
         state.loginUser.isLoading = false;
         state.loginUser.isError = true;
         state.loginUser.message = "Error: " + payload;
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.logoutUser.isLoading = true;
+      })
+      .addCase(logoutUser.fulfilled, (state, { payload }) => {
+        state.logoutUser.isLoading = false;
+        state.logoutUser.isSuccess = true;
+        state.logoutUser.isLoggedIn = false;
+      })
+      .addCase(logoutUser.rejected, (state, { payload }) => {
+        state.logoutUser.isLoading = false;
+        state.logoutUser.isError = true;
+        state.logoutUser.message = "Error: " + payload;
       });
   },
 });
 
-export const { reset } = userSlice.actions;
+export const { resetLoginUser, resetLogoutUser, resetRegisterUser } =
+  userSlice.actions;
 export const selectUser = (state: RootState) => state.user.registerUser;
 export default userSlice.reducer;
