@@ -2,7 +2,7 @@ html {
   font-size: 62.5%;
   font-family: "Roboto", sans-serif;
   scroll-behavior: smooth;
-  height: 100vh;
+  height: 100%;
 }
 
 body {
@@ -14,4 +14,8 @@ body {
 
 #root {
   height: 100%;
+}
+
+#footer {
+  height: 2.5rem;
 }
