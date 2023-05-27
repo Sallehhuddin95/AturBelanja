@@ -9,15 +9,17 @@ import {
 
 function App() {
   return (
-    <div className="bg-secondary bg-opacity-25 h-auto">
+    <div className="bg-secondary bg-opacity-25 w-100 position-relative h-100">
       <Router>
         <Header />
-        <Routes>
-          <Route path="/" element={<HomeScreen />} />
-          <Route path="/records" element={<RecordsScreen />} />
-          <Route path="/register" element={<RegisterScreen />} />
-          <Route path="/login" element={<LoginScreen />} />
-        </Routes>
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<HomeScreen />} />
+            <Route path="/records" element={<RecordsScreen />} />
+            <Route path="/register" element={<RegisterScreen />} />
+            <Route path="/login" element={<LoginScreen />} />
+          </Routes>
+        </main>
         <Footer />
       </Router>
     </div>
