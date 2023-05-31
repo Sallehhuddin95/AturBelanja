@@ -13,9 +13,44 @@ body {
 }
 
 #root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+#root > div {
   height: 100%;
 }
 
+/* header */
+#header {
+  z-index: 3;
+}
+
+/* feature card */
+.feature-card {
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: scale(1.1);
+  border: solid 1px #808080;
+}
+
+.feature-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Content */
+.content {
+  padding-bottom: 2.5rem;
+}
+
+/* footer */
+
 #footer {
   height: 2.5rem;
+  padding: 15px 5px;
+  margin-top: auto;
 }
