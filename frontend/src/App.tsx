@@ -9,10 +9,10 @@ import {
 
 function App() {
   return (
-    <div className="bg-secondary bg-opacity-25 w-100 position-relative h-100">
+    <>
       <Router>
         <Header />
-        <main className="flex-grow">
+        <main className="py-3 content">
           <Routes>
             <Route path="/" element={<HomeScreen />} />
             <Route path="/records" element={<RecordsScreen />} />
@@ -22,7 +22,7 @@ function App() {
         </main>
         <Footer />
       </Router>
-    </div>
+    </>
   );
 }
 

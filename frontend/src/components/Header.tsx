@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, NavLink } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../app/hook";
 import { resetLoginUser, logoutUser } from "../features/user/userSlice";
 
@@ -34,36 +33,39 @@ function Header() {
   }, [logoutSuccess, dispatch, navigate]);
 
   return (
-    <header className="w-100 top-0 position-sticky fs-4 fw-semibold p-3 bg-dark  text-white">
+    <header
+      id="header"
+      className="w-100 top-0 position-sticky fs-4 fw-semibold p-3 bg-dark  text-white"
+    >
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
         <Container>
-          <LinkContainer to="/">
-            <Navbar.Brand>Atur Belanja</Navbar.Brand>
-          </LinkContainer>
+          <NavLink to="/" className="navbar-brand">
+            Atur Belanja
+          </NavLink>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             {/* <SearchBox /> */}
             <Nav className="ms-auto">
-              <LinkContainer to="/records">
-                <Nav.Link>
-                  <i className="fas fa-shopping-cart"></i>Records
-                </Nav.Link>
-              </LinkContainer>
+              <NavLink to="/records" className="nav-link">
+                <i className="fas fa-shopping-cart"></i>Records
+              </NavLink>
               {user ? (
                 <NavDropdown title={user.name} id="username">
-                  <LinkContainer to="/profile">
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
-                  </LinkContainer>
+                  <NavLink to="/profile" className="dropdown-item">
+                    Profile
+                  </NavLink>
                   <NavDropdown.Item onClick={handleLogout}>
                     Logout
                   </NavDropdown.Item>
                 </NavDropdown>
               ) : (
-                <LinkContainer to="/login" onClick={handleLocation}>
-                  <Nav.Link>
-                    <i className="fas fa-user"></i>Login
-                  </Nav.Link>
-                </LinkContainer>
+                <NavLink
+                  to="/login"
+                  className="nav-link"
+                  onClick={handleLocation}
+                >
+                  <i className="fas fa-user"></i>Login
+                </NavLink>
               )}
             </Nav>
           </Navbar.Collapse>

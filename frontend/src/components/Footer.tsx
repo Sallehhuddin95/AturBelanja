@@ -5,7 +5,7 @@ function Footer() {
   return (
     <footer
       id="footer"
-      className="w-100 bottom-0 fs-6 fw-semibold text-center py-3 bg-dark bg-opacity-75 text-white position-absolute"
+      className="w-100 bottom-0 fs-6 fw-semibold text-center py-3 bg-dark bg-opacity-75 text-white"
     >
       Atur Belanja Copyright @ {currentYear}
     </footer>
