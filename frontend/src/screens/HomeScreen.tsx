@@ -4,8 +4,15 @@ import imageExpense from "../assets/images/expense.jpg";
 import imageIncome from "../assets/images/income.jpg";
 import imageBudget from "../assets/images/budgeting.jpg";
 import imageAnalytic from "../assets/images/analytics.jpg";
+import { useNavigate } from "react-router-dom";
 
 function HomeScreen() {
+  const navigate = useNavigate();
+
+  const handleRegister = () => {
+    navigate("/register");
+  };
+
   return (
     <Container>
       <h2 className="my-3">Welcome to Atur Belanja</h2>
@@ -25,7 +32,7 @@ function HomeScreen() {
               <p>
                 <strong>Sign up today and start managing your finances!</strong>
               </p>
-              <Button variant="primary" size="lg">
+              <Button variant="primary" size="lg" onClick={handleRegister}>
                 Register
               </Button>
             </Col>
