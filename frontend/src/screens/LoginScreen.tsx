@@ -37,8 +37,9 @@ function LoginScreen() {
       navigate("/records");
       dispatch(resetLogoutUser());
       //save user to local storage
+      localStorage.setItem("user", JSON.stringify(user));
     }
-  }, [isSuccess, navigate, dispatch]);
+  }, [isSuccess, navigate, dispatch, user]);
 
   return (
     <FormContainer>
