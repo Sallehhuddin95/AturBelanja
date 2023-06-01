@@ -28,6 +28,7 @@ def getExpensesByMonthAndYear(request):
 def addExpense(request):
     print(request.data.get('price'))
     expense = DailyExpense.objects.create(
+        userId=1,
         date=request.data.get('date'),
         detail=request.data.get('detail'),
         category=request.data.get('category'),
@@ -51,6 +52,7 @@ def deleteExpense(request, pk):
 def updateExpense(request, pk):
     data = request.data
     expense = DailyExpense.objects.get(id=pk)
+    expense.userId = 1
     expense.date = data['date']
     expense.detail = data['detail']
     expense.category = data['category']

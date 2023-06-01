@@ -35,7 +35,7 @@ function ExpensesForm(props: any) {
     });
 
     // Refresh the page
-    window.location.reload();
+    // window.location.reload();
   };
   // const handleShow = () => setShow(true);
   const handleAdd = (e: any) => {
