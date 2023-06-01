@@ -18,6 +18,7 @@ def getIncomeByMonthAndYear(request):
 @api_view(['POST'])
 def addIncome(request):
     income = DailyIncome.objects.create(
+        userId=1,
         date=request.data.get('date'),
         category=request.data.get('category'),
         note=request.data.get('note'),
@@ -32,6 +33,7 @@ def addIncome(request):
 def updateIncome(request, pk):
     data = request.data
     income = DailyIncome.objects.get(id=pk)
+    income.userId = 1
     income.date = data['date']
     income.category = data['category']
     income.note = data['note']
