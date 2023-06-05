@@ -2,6 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import userService from "./userService";
 
+//get current user from local storage
+const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+const alreadyLoggedIn = Object.keys(currentUser).length > 0;
+
 type User = {
   id: string;
   username: string;
@@ -53,9 +57,9 @@ const initialState: UserState = {
     message: null,
   },
   loginUser: {
-    user: null,
+    user: currentUser,
     users: null,
-    isLoggedIn: false,
+    isLoggedIn: alreadyLoggedIn,
     isError: false,
     isLoading: false,
     isSuccess: false,
@@ -172,6 +176,7 @@ const userSlice = createSlice({
         state.logoutUser.isLoading = false;
         state.logoutUser.isSuccess = true;
         state.logoutUser.isLoggedIn = false;
+        state.loginUser.isLoggedIn = false;
       })
       .addCase(logoutUser.rejected, (state, { payload }) => {
         state.logoutUser.isLoading = false;
@@ -184,4 +189,5 @@ const userSlice = createSlice({
 export const { resetLoginUser, resetLogoutUser, resetRegisterUser } =
   userSlice.actions;
 export const selectUser = (state: RootState) => state.user.registerUser;
+export const selectLoginUser = (state: RootState) => state.user.loginUser;
 export default userSlice.reducer;

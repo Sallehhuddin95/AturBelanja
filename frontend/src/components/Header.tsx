@@ -8,7 +8,7 @@ function Header() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { user } = useAppSelector((state) => state.user.loginUser);
+  const { user, isLoggedIn } = useAppSelector((state) => state.user.loginUser);
 
   const dispatch = useAppDispatch();
   const { isSuccess: logoutSuccess } = useAppSelector(
@@ -46,18 +46,20 @@ function Header() {
           <Navbar.Collapse id="basic-navbar-nav">
             {/* <SearchBox /> */}
             <Nav className="ms-auto">
-              <NavLink to="/records" className="nav-link">
-                <i className="fas fa-shopping-cart"></i>Records
-              </NavLink>
-              {user ? (
-                <NavDropdown title={user.name} id="username">
-                  <NavLink to="/profile" className="dropdown-item">
-                    Profile
+              {user && isLoggedIn ? (
+                <>
+                  <NavLink to="/records" className="nav-link">
+                    <i className="fas fa-shopping-cart"></i>Records
                   </NavLink>
-                  <NavDropdown.Item onClick={handleLogout}>
-                    Logout
-                  </NavDropdown.Item>
-                </NavDropdown>
+                  <NavDropdown title={user.name} id="username">
+                    <NavLink to="/profile" className="dropdown-item">
+                      Profile
+                    </NavLink>
+                    <NavDropdown.Item onClick={handleLogout}>
+                      Logout
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                </>
               ) : (
                 <NavLink
                   to="/login"

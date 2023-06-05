@@ -37,7 +37,7 @@ function RegisterScreen() {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/records");
+      navigate("/login");
     }
   }, [navigate, isSuccess]);
 
