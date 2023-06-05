@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Footer, Header } from "./components";
+import { Footer, Header, ProtectedRoute } from "./components";
 import {
   RecordsScreen,
   HomeScreen,
@@ -15,7 +15,16 @@ function App() {
         <main className="py-3 content">
           <Routes>
             <Route path="/" element={<HomeScreen />} />
-            <Route path="/records" element={<RecordsScreen />} />
+
+            <Route
+              path="/records"
+              element={
+                <ProtectedRoute>
+                  <RecordsScreen />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="/register" element={<RegisterScreen />} />
             <Route path="/login" element={<LoginScreen />} />
           </Routes>
