@@ -54,6 +54,8 @@ function ExpensesTable(props: any) {
   const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   const currentDay = new Date().getDate();
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
 
   const handleEdit = (id: string) => {
     setSelectedExpenseId(id);
@@ -116,7 +118,13 @@ function ExpensesTable(props: any) {
       {daysArray.map((day) => (
         <div
           key={day}
-          className={`my-3 px-3 ${day === currentDay ? "today" : ""}`}
+          className={`my-3 px-3 ${
+            day === currentDay &&
+            monthNumber === currentMonth &&
+            selectedYear === currentYear
+              ? "today"
+              : ""
+          }`}
         >
           <Row className="my-3">
             <Col>
