@@ -39,6 +39,8 @@ function IncomesTable(props: any) {
   const [totalIncomes, setTotalIncomes] = useState<{ [key: number]: number }>(
     {}
   );
+  const user = localStorage.getItem("user");
+  const { id: userId } = JSON.parse(user || "{}");
 
   const { selectedMonth, selectedYear } = props;
   const monthNumber = monthsList.indexOf(selectedMonth);
@@ -64,14 +66,16 @@ function IncomesTable(props: any) {
   useEffect(() => {
     const fetchIncomes = async () => {
       try {
-        dispatch(getIncomes({ month: monthNumber + 1, year: selectedYear }));
+        dispatch(
+          getIncomes({ month: monthNumber + 1, year: selectedYear, userId })
+        );
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchIncomes();
-  }, [monthNumber, selectedYear, dispatch]);
+  }, [monthNumber, selectedYear, dispatch, userId]);
 
   const previousTotalIncomesRef = useRef({});
   useEffect(() => {

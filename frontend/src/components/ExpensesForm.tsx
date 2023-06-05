@@ -7,8 +7,8 @@ import { addExpense, editExpense } from "../features/expense/expenseSlice";
 
 function ExpensesForm(props: any) {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const { addedExpense } = useAppSelector((state) => state.expense);
+  const user = localStorage.getItem("user");
+  const { id: userId } = JSON.parse(user || "{}");
   const { action, expense } = props;
   const [formData, setFormData] = useState({
     expDate: new Date().toISOString().substring(0, 10),
@@ -51,6 +51,7 @@ function ExpensesForm(props: any) {
             note,
             price: formattedPrice,
             payment: paymentMethod,
+            userId,
           })
         )
       : dispatch(
@@ -62,6 +63,7 @@ function ExpensesForm(props: any) {
             note,
             price: formattedPrice,
             payment: paymentMethod,
+            userId,
           })
         );
 

@@ -9,8 +9,9 @@ from ..serializers import DailyIncomeSerializer
 def getIncomeByMonthAndYear(request):
     month = request.GET.get('month')
     year = request.GET.get('year')
+    userId = request.GET.get('userId')
     dailyIncome = DailyIncome.objects.filter(
-        date__month=month, date__year=year)
+        date__month=month, date__year=year, userId=userId)
     serializer = DailyIncomeSerializer(dailyIncome, many=True)
     return Response(serializer.data)
 
@@ -18,7 +19,7 @@ def getIncomeByMonthAndYear(request):
 @api_view(['POST'])
 def addIncome(request):
     income = DailyIncome.objects.create(
-        userId=1,
+        userId=request.data.get('userId'),
         date=request.data.get('date'),
         category=request.data.get('category'),
         note=request.data.get('note'),
@@ -33,7 +34,7 @@ def addIncome(request):
 def updateIncome(request, pk):
     data = request.data
     income = DailyIncome.objects.get(id=pk)
-    income.userId = 1
+    # income.userId = 1
     income.date = data['date']
     income.category = data['category']
     income.note = data['note']

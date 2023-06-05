@@ -6,7 +6,8 @@ import { addIncome, editIncome } from "../features/income/incomeSlice";
 
 function IncomesForm(props: any) {
   const dispatch = useAppDispatch();
-  const { addedIncome } = useAppSelector((state) => state.income);
+  const user = localStorage.getItem("user");
+  const { id: userId } = JSON.parse(user || "{}");
   const { action, income } = props;
   const [formData, setFormData] = useState({
     incDate: new Date().toISOString().substring(0, 10),
@@ -46,6 +47,7 @@ function IncomesForm(props: any) {
             note,
             amount: formattedPrice,
             payment: paymentMethod,
+            userId,
           })
         )
       : dispatch(
@@ -56,6 +58,7 @@ function IncomesForm(props: any) {
             note,
             amount: formattedPrice,
             payment: paymentMethod,
+            userId,
           })
         );
 

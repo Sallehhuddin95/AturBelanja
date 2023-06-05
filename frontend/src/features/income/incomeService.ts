@@ -11,7 +11,7 @@ const getIncomes = async (data: any) => {
 };
 
 const addIncome = async (data: any) => {
-  const response = await axios.post(`${API_URL}add`, data);
+  const response = await axios.post(`${API_URL}add/`, data);
 
   return response.data;
 };
