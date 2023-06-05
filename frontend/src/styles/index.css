@@ -47,6 +47,11 @@ body {
   padding-bottom: 2.5rem;
 }
 
+.today {
+  background-color: #b6d0e2;
+  border-radius: 5px;
+}
+
 /* footer */
 
 #footer {

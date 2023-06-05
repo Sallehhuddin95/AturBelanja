@@ -112,7 +112,10 @@ function IncomesTable(props: any) {
     <>
       <IncomesForm action="delete" />
       {daysArray.map((day) => (
-        <div key={day} className="my-3">
+        <div
+          key={day}
+          className={`my-3 px-3 ${day === currentDay ? "today" : ""}`}
+        >
           <Row className="my-3">
             <Col>
               <strong>
