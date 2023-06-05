@@ -41,6 +41,9 @@ function ExpensesTable(props: any) {
     {}
   );
 
+  const user = localStorage.getItem("user");
+  const { id: userId } = JSON.parse(user || "{}");
+
   // const [expenses, setExpenses] = useState<expenseRecord[]>([]);
   const { selectedMonth, selectedYear } = props;
   const monthNumber = monthsList.indexOf(selectedMonth);
@@ -58,7 +61,7 @@ function ExpensesTable(props: any) {
   };
 
   const handleDelete = (id: string) => {
-    console.log("Delete id: ", id);
+    // console.log("Delete id: ", id);
     setSelectedExpenseId(id);
     setOpenConfirmationDialog(true);
   };
@@ -66,14 +69,16 @@ function ExpensesTable(props: any) {
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        dispatch(getExpenses({ month: monthNumber + 1, year: selectedYear }));
+        dispatch(
+          getExpenses({ month: monthNumber + 1, year: selectedYear, userId })
+        );
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchExpenses();
-  }, [monthNumber, selectedYear, dispatch]);
+  }, [monthNumber, selectedYear, dispatch, userId]);
 
   const previousTotalExpensesRef = useRef({});
 

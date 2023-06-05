@@ -10,7 +10,7 @@ from django.db import models
 class DailyExpense(models.Model):
 
     # declare userId give user if a default value of 1
-    userId = models.IntegerField(default=1)
+    userId = models.IntegerField(default=0)
     date = models.DateField()
     detail = models.CharField(max_length=100)
     category = models.CharField(max_length=100)
@@ -23,7 +23,7 @@ class DailyExpense(models.Model):
 
 
 class DailyIncome(models.Model):
-    userId = models.IntegerField(default=1)
+    userId = models.IntegerField(default=0)
     date = models.DateField()
     amount = models.FloatField()
     category = models.CharField(max_length=100)
