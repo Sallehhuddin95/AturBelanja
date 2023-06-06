@@ -5,6 +5,8 @@ import {
   HomeScreen,
   RegisterScreen,
   LoginScreen,
+  DashboardScreen,
+  ProfileScreen,
 } from "./screens";
 
 function App() {
@@ -21,6 +23,24 @@ function App() {
               element={
                 <ProtectedRoute>
                   <RecordsScreen />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardScreen />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfileScreen />
                 </ProtectedRoute>
               }
             />
