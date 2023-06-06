@@ -49,7 +49,10 @@ function Header() {
               {user && isLoggedIn ? (
                 <>
                   <NavLink to="/records" className="nav-link">
-                    <i className="fas fa-shopping-cart"></i>Records
+                    Records
+                  </NavLink>
+                  <NavLink to="/dashboard" className="nav-link">
+                    Insights
                   </NavLink>
                   <NavDropdown title={user.name} id="username">
                     <NavLink to="/profile" className="dropdown-item">

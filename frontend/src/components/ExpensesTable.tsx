@@ -118,7 +118,7 @@ function ExpensesTable(props: any) {
       {daysArray.map((day) => (
         <div
           key={day}
-          className={`my-3 px-3 ${
+          className={`my-3 p-3 ${
             day === currentDay &&
             monthNumber === currentMonth &&
             selectedYear === currentYear
