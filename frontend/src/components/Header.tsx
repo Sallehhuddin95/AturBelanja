@@ -8,7 +8,8 @@ function Header() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { user, isLoggedIn } = useAppSelector((state) => state.user.loginUser);
+  const { isLoggedIn } = useAppSelector((state) => state.user.loginUser);
+  const { user } = useAppSelector((state) => state.user.getUser);
 
   const dispatch = useAppDispatch();
   const { isSuccess: logoutSuccess } = useAppSelector(
@@ -28,7 +29,7 @@ function Header() {
     if (logoutSuccess) {
       navigate("/login");
       dispatch(resetLoginUser());
-      // window.location.reload();
+      window.location.reload();
     }
   }, [logoutSuccess, dispatch, navigate]);
 
@@ -50,6 +51,9 @@ function Header() {
                 <>
                   <NavLink to="/records" className="nav-link">
                     Records
+                  </NavLink>
+                  <NavLink to="/budget" className="nav-link">
+                    Budgeting
                   </NavLink>
                   <NavLink to="/dashboard" className="nav-link">
                     Insights

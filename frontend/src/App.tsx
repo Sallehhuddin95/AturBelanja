@@ -7,6 +7,7 @@ import {
   LoginScreen,
   DashboardScreen,
   ProfileScreen,
+  BudgetScreen,
 } from "./screens";
 
 function App() {
@@ -23,6 +24,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <RecordsScreen />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/budget"
+              element={
+                <ProtectedRoute>
+                  <BudgetScreen />
                 </ProtectedRoute>
               }
             />
