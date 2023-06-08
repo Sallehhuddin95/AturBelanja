@@ -44,6 +44,21 @@ type UserState = {
     isSuccess: boolean;
     message: string | null;
   };
+  updateUser: {
+    user: User | null;
+    isLoggedIn: boolean;
+    isError: boolean;
+    isLoading: boolean;
+    isSuccess: boolean;
+    message: string | null;
+  };
+  getUser: {
+    user: User | null;
+    isError: boolean;
+    isLoading: boolean;
+    isSuccess: boolean;
+    message: string | null;
+  };
 };
 
 const initialState: UserState = {
@@ -67,6 +82,21 @@ const initialState: UserState = {
   },
   logoutUser: {
     isLoggedIn: false,
+    isError: false,
+    isLoading: false,
+    isSuccess: false,
+    message: null,
+  },
+  updateUser: {
+    user: currentUser,
+    isLoggedIn: alreadyLoggedIn,
+    isError: false,
+    isLoading: false,
+    isSuccess: false,
+    message: null,
+  },
+  getUser: {
+    user: currentUser,
     isError: false,
     isLoading: false,
     isSuccess: false,
@@ -108,6 +138,42 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const updateUser = createAsyncThunk(
+  "user/update",
+  async (formData: any, thunkAPI: any) => {
+    try {
+      const token = thunkAPI.getState().user.loginUser.user?.token;
+      return await userService.updateUser(formData, token);
+    } catch (error: Error | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const getUser = createAsyncThunk(
+  "user/getUser",
+  async (formData: any, thunkAPI: any) => {
+    try {
+      const token = thunkAPI.getState().user.loginUser.user?.token;
+      return await userService.getUser(formData, token);
+    } catch (error: Error | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const logoutUser = createAsyncThunk(
   "user/logout",
   async (formData: any, thunkAPI) => {
@@ -137,6 +203,9 @@ const userSlice = createSlice({
     },
     resetLogoutUser(state) {
       state.logoutUser = initialState.logoutUser;
+    },
+    resetUpdateUser(state) {
+      state.updateUser = initialState.updateUser;
     },
   },
   extraReducers: (builder) => {
@@ -182,12 +251,44 @@ const userSlice = createSlice({
         state.logoutUser.isLoading = false;
         state.logoutUser.isError = true;
         state.logoutUser.message = "Error: " + payload;
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.updateUser.isLoading = true;
+      })
+
+      .addCase(updateUser.fulfilled, (state, { payload }) => {
+        state.updateUser.isLoading = false;
+        state.updateUser.isSuccess = true;
+        state.updateUser.user = payload;
+        state.updateUser.isLoggedIn = true;
+      })
+      .addCase(updateUser.rejected, (state, { payload }) => {
+        state.updateUser.isLoading = false;
+        state.updateUser.isError = true;
+        state.updateUser.message = "Error: " + payload;
+      })
+      .addCase(getUser.pending, (state) => {
+        state.getUser.isLoading = true;
+      })
+      .addCase(getUser.fulfilled, (state, { payload }) => {
+        state.getUser.isLoading = false;
+        state.getUser.isSuccess = true;
+        state.getUser.user = payload;
+      })
+      .addCase(getUser.rejected, (state, { payload }) => {
+        state.getUser.isLoading = false;
+        state.getUser.isError = true;
+        state.getUser.message = "Error: " + payload;
       });
   },
 });
 
-export const { resetLoginUser, resetLogoutUser, resetRegisterUser } =
-  userSlice.actions;
+export const {
+  resetLoginUser,
+  resetLogoutUser,
+  resetRegisterUser,
+  resetUpdateUser,
+} = userSlice.actions;
 export const selectUser = (state: RootState) => state.user.registerUser;
 export const selectLoginUser = (state: RootState) => state.user.loginUser;
 export default userSlice.reducer;

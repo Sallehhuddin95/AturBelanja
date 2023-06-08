@@ -3,14 +3,19 @@ import { FormContainer } from "../components";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hook";
-import { loginUser, resetLogoutUser } from "../features/user/userSlice";
+import {
+  loginUser,
+  getUser,
+  resetLogoutUser,
+} from "../features/user/userSlice";
 
 function LoginScreen() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { user, isError, isSuccess, message } = useAppSelector(
+  const { isError, isSuccess, message } = useAppSelector(
     (state) => state.user.loginUser
   );
+  const { user } = useAppSelector((state) => state.user.getUser);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -35,6 +40,8 @@ function LoginScreen() {
   useEffect(() => {
     if (isSuccess) {
       navigate("/records");
+      //get user profile
+      dispatch(getUser(user?.id));
       dispatch(resetLogoutUser());
       //save user to local storage
       localStorage.setItem("user", JSON.stringify(user));
