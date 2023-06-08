@@ -27,7 +27,7 @@ const updateUser = async (data: any, token: any) => {
     },
   };
 
-  const id = data.userId;
+  // const id = data.userId;
   const response = await axios.put(`${API_URL}profile/update/`, data, config);
 
   if (response.data) {
@@ -39,12 +39,11 @@ const updateUser = async (data: any, token: any) => {
 export const getUser = async (data: any, token: any) => {
   const config = {
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   };
 
-  const id = data.userId;
+  // const id = data.userId;
   const response = await axios.get(`${API_URL}profile/`, config);
   return response.data;
 };
