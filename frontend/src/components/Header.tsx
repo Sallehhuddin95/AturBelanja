@@ -18,7 +18,7 @@ function Header() {
 
   const handleLogout = () => {
     dispatch(logoutUser("logout"));
-    localStorage.removeItem("userInfo");
+    localStorage.removeItem("user");
   };
 
   const handleLocation = () => {

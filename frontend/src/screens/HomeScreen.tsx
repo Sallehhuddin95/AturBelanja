@@ -4,10 +4,13 @@ import imageExpense from "../assets/images/expense.jpg";
 import imageIncome from "../assets/images/income.jpg";
 import imageBudget from "../assets/images/budgeting.jpg";
 import imageAnalytic from "../assets/images/analytics.jpg";
-import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../app/hook";
+import { Link, useNavigate } from "react-router-dom";
 
 function HomeScreen() {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAppSelector((state) => state.user.loginUser);
+  const { user } = useAppSelector((state) => state.user.getUser);
 
   const handleRegister = () => {
     navigate("/register");
@@ -15,7 +18,11 @@ function HomeScreen() {
 
   return (
     <Container>
-      <h2 className="my-3">Welcome to Atur Belanja</h2>
+      <h2 className="my-3">
+        {isLoggedIn && user
+          ? `Welcome, ${user.name}`
+          : "Welcome to Atur Belanja"}
+      </h2>
       <main className="flex-grow">
         <section>
           <Row>
@@ -29,15 +36,45 @@ function HomeScreen() {
                 patterns, our app provides you with the necessary features and
                 insights to manage your money effectively
               </p>
-              <p>
-                <strong>Sign up today and start managing your finances!</strong>
-              </p>
-              <Button variant="primary" size="lg" onClick={handleRegister}>
-                Register
-              </Button>
+              {!isLoggedIn && (
+                <>
+                  <p>
+                    <strong>
+                      Sign up today and start managing your finances!
+                    </strong>
+                  </p>
+                  <Button variant="primary" size="lg" onClick={handleRegister}>
+                    Register
+                  </Button>
+                </>
+              )}
             </Col>
             <Col></Col>
           </Row>
+          {isLoggedIn && (
+            <Row className="mt-3">
+              <Col>
+                <h2>Track Your Expenses</h2>
+                <p>
+                  Easily keep track of your daily expenses and categorize them
+                  for better financial management.
+                </p>
+                <Link to="/records">
+                  <Button variant="primary">Go to Expenses</Button>
+                </Link>
+              </Col>
+              <Col>
+                <h2>Create a Budget</h2>
+                <p>
+                  Set a budget and monitor your spending to ensure you stay
+                  within your financial goals.
+                </p>
+                <Link to="/budget">
+                  <Button variant="primary">Go to Budgeting</Button>
+                </Link>
+              </Col>
+            </Row>
+          )}
         </section>
         <section className="mt-5">
           <h3>Key Features of Atur Belanja</h3>
