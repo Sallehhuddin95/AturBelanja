@@ -4,6 +4,7 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { IncomesForm, ConfirmationDialog } from ".";
 import { useAppDispatch, useAppSelector } from "../app/hook";
 import { getIncomes } from "../features/income/incomeSlice";
+import { Loader } from "../components";
 
 const monthsList: string[] = [
   "January",
@@ -31,7 +32,9 @@ interface incomeRecord {
 
 function IncomesTable(props: any) {
   const dispatch = useAppDispatch();
-  const { monthlyIncomes } = useAppSelector((state) => state.income);
+  const { incomes, isSuccess, isLoading } = useAppSelector(
+    (state) => state.income.monthlyIncomes
+  );
   const [openIncomeForm, setOpenIncomeForm] = useState<boolean>(false);
   const [openConfirmationDialog, setOpenConfirmationDialog] =
     useState<boolean>(false);
@@ -77,13 +80,13 @@ function IncomesTable(props: any) {
     };
 
     fetchIncomes();
-  }, [monthNumber, selectedYear, dispatch, userId]);
+  }, [monthNumber, selectedYear, dispatch, userId, isSuccess]);
 
   const previousTotalIncomesRef = useRef({});
   useEffect(() => {
     // Calculate total income for each day
     const calculateTotalIncomes = (day: number) => {
-      const incomesForDay = monthlyIncomes.incomes.filter(
+      const incomesForDay = incomes.filter(
         (income: incomeRecord) => new Date(income.date).getDate() === day
       );
       const total = incomesForDay.reduce(
@@ -108,10 +111,11 @@ function IncomesTable(props: any) {
       previousTotalIncomesRef.current = totalIncomesByDay;
     }
     // setTotalIncomes(totalIncomesByDay);
-  }, [monthlyIncomes.incomes, daysArray]);
+  }, [incomes, daysArray]);
 
   return (
     <>
+      {isLoading && <Loader />}
       <IncomesForm action="delete" />
       {daysArray.map((day) => (
         <div
@@ -145,7 +149,7 @@ function IncomesTable(props: any) {
                 </tr>
               </thead>
               <tbody>
-                {monthlyIncomes.incomes
+                {incomes
                   .filter((income) => new Date(income.date).getDate() === day)
                   .map((income, index) => (
                     <tr key={income.id}>
@@ -177,9 +181,7 @@ function IncomesTable(props: any) {
       {openIncomeForm && (
         <IncomesForm
           action="edit"
-          income={monthlyIncomes.incomes.find(
-            (income) => income.id === selectedIncomeId
-          )}
+          income={incomes.find((income) => income.id === selectedIncomeId)}
           show={openIncomeForm}
           onHide={() => setOpenIncomeForm(false)}
         />

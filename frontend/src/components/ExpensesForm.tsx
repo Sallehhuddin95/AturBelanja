@@ -2,11 +2,22 @@ import React, { useState, useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { expenseCategories, paymentMethods } from "../assets/dummyData";
 import { useAppDispatch, useAppSelector } from "../app/hook";
-import { useNavigate } from "react-router-dom";
-import { addExpense, editExpense } from "../features/expense/expenseSlice";
+import {
+  addExpense,
+  editExpense,
+  resetMonthlyExpense,
+} from "../features/expense/expenseSlice";
 
 function ExpensesForm(props: any) {
   const dispatch = useAppDispatch();
+
+  // get addedExpense isSuccess
+  const { isSuccess } = useAppSelector((state) => state.expense.addedExpense);
+
+  const { isSuccess: editSuccess } = useAppSelector(
+    (state) => state.expense.editedExpense
+  );
+
   const user = localStorage.getItem("user");
   const { id: userId } = JSON.parse(user || "{}");
   const { action, expense } = props;
@@ -34,8 +45,7 @@ function ExpensesForm(props: any) {
       paymentMethod: paymentMethods[0],
     });
 
-    // Refresh the page
-    // window.location.reload();
+    props.onHide();
   };
   // const handleShow = () => setShow(true);
   const handleAdd = (e: any) => {
@@ -76,7 +86,6 @@ function ExpensesForm(props: any) {
       ...prevState,
       [e.target.name]: e.target.value,
     }));
-    // console.log(formData);
   };
 
   useEffect(() => {
@@ -104,12 +113,14 @@ function ExpensesForm(props: any) {
     }
   }, [action, expense]);
 
+  useEffect(() => {
+    if (isSuccess || editSuccess) {
+      dispatch(resetMonthlyExpense());
+    }
+  }, [isSuccess, editSuccess, dispatch]);
+
   return (
     <div>
-      {" "}
-      {/* <Button variant="outline-dark" size="sm" onClick={handleShow}>
-        Add New
-      </Button> */}
       <Modal {...props}>
         <Modal.Header closeButton>
           <Modal.Title>{formTitle}</Modal.Title>

@@ -4,6 +4,7 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { ExpensesForm, ConfirmationDialog } from ".";
 import { useAppDispatch, useAppSelector } from "../app/hook";
 import { getExpenses } from "../features/expense/expenseSlice";
+import { Loader } from "../components";
 
 const monthsList: string[] = [
   "January",
@@ -32,7 +33,10 @@ interface expenseRecord {
 
 function ExpensesTable(props: any) {
   const dispatch = useAppDispatch();
-  const { monthlyExpenses } = useAppSelector((state) => state.expense);
+  const { expenses, isSuccess, isLoading } = useAppSelector(
+    (state) => state.expense.monthlyExpenses
+  );
+
   const [openExpenseForm, setOpenExpenseForm] = useState<boolean>(false);
   const [openConfirmationDialog, setOpenConfirmationDialog] =
     useState<boolean>(false);
@@ -80,13 +84,13 @@ function ExpensesTable(props: any) {
     };
 
     fetchExpenses();
-  }, [monthNumber, selectedYear, dispatch, userId]);
+  }, [monthNumber, selectedYear, dispatch, userId, isSuccess]);
 
   const previousTotalExpensesRef = useRef({});
 
   useEffect(() => {
     const calculateTotalExpenses = (day: number) => {
-      const expensesForDay = monthlyExpenses.expenses.filter(
+      const expensesForDay = expenses.filter(
         (expense: expenseRecord) => new Date(expense.date).getDate() === day
       );
       const total = expensesForDay.reduce(
@@ -110,10 +114,11 @@ function ExpensesTable(props: any) {
       setTotalExpenses(totalExpensesByDay);
       previousTotalExpensesRef.current = totalExpensesByDay;
     }
-  }, [monthlyExpenses.expenses, daysArray]);
+  }, [expenses, daysArray]);
 
   return (
     <>
+      {isLoading && <Loader />}
       <ExpensesForm action="delete" />
       {daysArray.map((day) => (
         <div
@@ -149,7 +154,7 @@ function ExpensesTable(props: any) {
                 </tr>
               </thead>
               <tbody>
-                {monthlyExpenses.expenses
+                {expenses
                   .filter((expense) => new Date(expense.date).getDate() === day)
                   .map((expense, index) => (
                     <tr key={expense.id}>
@@ -182,9 +187,7 @@ function ExpensesTable(props: any) {
       {openExpenseForm && (
         <ExpensesForm
           action="edit"
-          expense={monthlyExpenses.expenses.find(
-            (expense) => expense.id === selectedExpenseId
-          )}
+          expense={expenses.find((expense) => expense.id === selectedExpenseId)}
           show={openExpenseForm}
           onHide={() => setOpenExpenseForm(false)}
         />

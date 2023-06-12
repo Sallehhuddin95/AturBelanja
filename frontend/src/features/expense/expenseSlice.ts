@@ -146,7 +146,9 @@ export const expenseSlice = createSlice({
   name: "expense",
   initialState,
   reducers: {
-    resetState: (state) => initialState,
+    resetMonthlyExpense: (state) => {
+      state.monthlyExpenses = initialState.monthlyExpenses;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -170,6 +172,7 @@ export const expenseSlice = createSlice({
         state.addedExpense.isLoading = false;
         state.addedExpense.isSuccess = true;
         state.addedExpense.expense = action.payload;
+        state.monthlyExpenses.isSuccess = false;
       })
       .addCase(addExpense.rejected, (state, action) => {
         state.addedExpense.isLoading = false;
@@ -206,7 +209,7 @@ export const expenseSlice = createSlice({
   },
 });
 
-export const { resetState } = expenseSlice.actions;
+export const { resetMonthlyExpense } = expenseSlice.actions;
 export const selectExpenses = (state: RootState) =>
   state.expense.monthlyExpenses;
 export default expenseSlice.reducer;

@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "../app/hook";
-import { deleteExpense } from "../features/expense/expenseSlice";
+import {
+  deleteExpense,
+  resetMonthlyExpense,
+} from "../features/expense/expenseSlice";
 import { deleteIncome } from "../features/income/incomeSlice";
 
 function ConfirmationDialog(props: any) {
   const dispatch = useAppDispatch();
+  const { isSuccess: delExpenseSuccess } = useAppSelector(
+    (state) => state.expense.deletedExpense
+  );
+  const { isSuccess: delIncomeSuccess } = useAppSelector(
+    (state) => state.income.deletedIncome
+  );
   const [text, setText] = useState<string>("");
   const { action, id, itemType } = props;
-  console.log("ConfirmationDialog id: ", id);
 
   const handleClose = () => {
     props.onHide();
@@ -22,8 +30,6 @@ function ConfirmationDialog(props: any) {
       ? dispatch(deleteExpense({ id }))
       : null;
     props.onHide();
-    //Refresh current page
-    // window.location.reload();
   };
 
   useEffect(() => {
@@ -39,6 +45,15 @@ function ConfirmationDialog(props: any) {
         break;
     }
   }, [itemType]);
+
+  useEffect(() => {
+    if (delExpenseSuccess) {
+      dispatch(resetMonthlyExpense());
+    }
+    if (delIncomeSuccess) {
+      dispatch(resetMonthlyExpense());
+    }
+  }, [delExpenseSuccess, delIncomeSuccess, dispatch]);
 
   return (
     <>
