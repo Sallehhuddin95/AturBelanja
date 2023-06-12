@@ -39,12 +39,10 @@ function LoginScreen() {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/records");
+      navigate("/");
       //get user profile
       dispatch(getUser(user?.id));
       dispatch(resetLogoutUser());
-      //save user to local storage
-      localStorage.setItem("user", JSON.stringify(user));
     }
   }, [isSuccess, navigate, dispatch, user]);
 
