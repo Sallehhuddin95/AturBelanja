@@ -2,10 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { incomeCategories, incomePaymentMethods } from "../assets/dummyData";
 import { useAppDispatch, useAppSelector } from "../app/hook";
-import { addIncome, editIncome } from "../features/income/incomeSlice";
+import {
+  addIncome,
+  editIncome,
+  resetMonthlyIncome,
+} from "../features/income/incomeSlice";
 
 function IncomesForm(props: any) {
   const dispatch = useAppDispatch();
+  const { isSuccess: addIncomeSuccess } = useAppSelector(
+    (state) => state.income.addedIncome
+  );
+  const { isSuccess: editIncomeSuccess } = useAppSelector(
+    (state) => state.income.editedIncome
+  );
   const user = localStorage.getItem("user");
   const { id: userId } = JSON.parse(user || "{}");
   const { action, income } = props;
@@ -31,13 +41,11 @@ function IncomesForm(props: any) {
       paymentMethod: incomePaymentMethods[0],
     });
 
-    // Refresh the page
-    // window.location.reload();
+    props.onHide();
   };
-  // const handleShow = () => setShow(true);
+
   const handleAdd = (e: any) => {
     e.preventDefault();
-    // console.log("Add button clicked");
     const formattedPrice = parseFloat(amount).toFixed(2);
     action === "add"
       ? dispatch(
@@ -71,7 +79,6 @@ function IncomesForm(props: any) {
       ...prevState,
       [e.target.name]: e.target.value,
     }));
-    // console.log(formData);
   };
 
   useEffect(() => {
@@ -97,6 +104,12 @@ function IncomesForm(props: any) {
         break;
     }
   }, [action, income]);
+
+  useEffect(() => {
+    if (addIncomeSuccess || editIncomeSuccess) {
+      dispatch(resetMonthlyIncome());
+    }
+  }, [addIncomeSuccess, editIncomeSuccess, dispatch]);
 
   return (
     <div>
