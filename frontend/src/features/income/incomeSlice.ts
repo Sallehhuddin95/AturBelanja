@@ -17,28 +17,28 @@ type IncomeState = {
     isLoading: boolean;
     isErrored: boolean;
     isSuccess: boolean;
-    errorMessage: string;
+    message: string | null;
   };
   addedIncome: {
     income: Income[];
     isLoading: boolean;
     isErrored: boolean;
     isSuccess: boolean;
-    errorMessage: string;
+    message: string | null;
   };
   editedIncome: {
     income: Income[];
     isLoading: boolean;
     isErrored: boolean;
     isSuccess: boolean;
-    errorMessage: string;
+    message: string | null;
   };
   deletedIncome: {
     income: Income[];
     isLoading: boolean;
     isErrored: boolean;
     isSuccess: boolean;
-    errorMessage: string;
+    message: string | null;
   };
 };
 
@@ -48,28 +48,28 @@ const initialState: IncomeState = {
     isLoading: false,
     isErrored: false,
     isSuccess: false,
-    errorMessage: "",
+    message: "",
   },
   addedIncome: {
     income: [],
     isLoading: false,
     isErrored: false,
     isSuccess: false,
-    errorMessage: "",
+    message: "",
   },
   editedIncome: {
     income: [],
     isLoading: false,
     isErrored: false,
     isSuccess: false,
-    errorMessage: "",
+    message: "",
   },
   deletedIncome: {
     income: [],
     isLoading: false,
     isErrored: false,
     isSuccess: false,
-    errorMessage: "",
+    message: "",
   },
 };
 
@@ -161,7 +161,7 @@ const incomeSlice = createSlice({
     builder.addCase(getIncomes.rejected, (state, action) => {
       state.monthlyIncomes.isLoading = false;
       state.monthlyIncomes.isErrored = true;
-      state.monthlyIncomes.errorMessage = "Error fetching incomes";
+      state.monthlyIncomes.message = "Error: " + action.payload;
     });
     builder.addCase(addIncome.pending, (state) => {
       state.addedIncome.isLoading = true;
@@ -174,7 +174,7 @@ const incomeSlice = createSlice({
     builder.addCase(addIncome.rejected, (state, action) => {
       state.addedIncome.isLoading = false;
       state.addedIncome.isErrored = true;
-      state.addedIncome.errorMessage = "Error adding income";
+      state.addedIncome.message = "Error: " + action.payload;
     });
     builder.addCase(editIncome.pending, (state) => {
       state.editedIncome.isLoading = true;
@@ -187,7 +187,7 @@ const incomeSlice = createSlice({
     builder.addCase(editIncome.rejected, (state, action) => {
       state.editedIncome.isLoading = false;
       state.editedIncome.isErrored = true;
-      state.editedIncome.errorMessage = "Error editing income";
+      state.editedIncome.message = "Error: " + action.payload;
     });
     builder.addCase(deleteIncome.pending, (state) => {
       state.deletedIncome.isLoading = true;
@@ -200,7 +200,7 @@ const incomeSlice = createSlice({
     builder.addCase(deleteIncome.rejected, (state, action) => {
       state.deletedIncome.isLoading = false;
       state.deletedIncome.isErrored = true;
-      state.deletedIncome.errorMessage = "Error deleting income";
+      state.deletedIncome.message = "Error: " + action.payload;
     });
   },
 });

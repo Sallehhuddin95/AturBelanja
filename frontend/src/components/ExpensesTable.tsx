@@ -4,7 +4,7 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { ExpensesForm, ConfirmationDialog } from ".";
 import { useAppDispatch, useAppSelector } from "../app/hook";
 import { getExpenses } from "../features/expense/expenseSlice";
-import { Loader } from "../components";
+import { Loader, Message } from "../components";
 
 const monthsList: string[] = [
   "January",
@@ -33,7 +33,7 @@ interface expenseRecord {
 
 function ExpensesTable(props: any) {
   const dispatch = useAppDispatch();
-  const { expenses, isSuccess, isLoading } = useAppSelector(
+  const { expenses, isSuccess, isLoading, isErrored, message } = useAppSelector(
     (state) => state.expense.monthlyExpenses
   );
 
@@ -118,72 +118,80 @@ function ExpensesTable(props: any) {
 
   return (
     <>
-      {isLoading && <Loader />}
-      <ExpensesForm action="delete" />
-      {daysArray.map((day) => (
-        <div
-          key={day}
-          className={`my-3 p-3 ${
-            day === currentDay &&
-            monthNumber === currentMonth &&
-            selectedYear === currentYear
-              ? "today"
-              : ""
-          }`}
-        >
-          <Row className="my-3">
-            <Col>
-              <strong>
-                Date: {day} {selectedMonth} {selectedYear}
-              </strong>
-            </Col>{" "}
-            <Col>Total Daily Income: </Col>{" "}
-            <Col>Total Daily Spending: RM {totalExpenses[day]} </Col>
-          </Row>
-          <Row>
-            <Table striped bordered hover size="sm">
-              <thead>
-                <tr>
-                  <th>No.</th>
-                  <th>Details</th>
-                  <th>Category</th>
-                  <th>Price (RM)</th>
-                  <th>Payment Method</th>
-                  <th>Note</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {expenses
-                  .filter((expense) => new Date(expense.date).getDate() === day)
-                  .map((expense, index) => (
-                    <tr key={expense.id}>
-                      <td>{index + 1}</td>
-                      <td>{expense.detail}</td>
-                      <td>{expense.category}</td>
-                      <td>{expense.price}</td>
-                      <td>{expense.payment}</td>
-                      <td>{expense.note}</td>
-                      <td className="d-flex justify-content-center">
-                        <Button
-                          className="me-2"
-                          onClick={() => handleEdit(expense.id)}
-                        >
-                          <FaEdit />
-                        </Button>
-
-                        <Button onClick={() => handleDelete(expense.id)}>
-                          <FaTrashAlt />
-                        </Button>
-                      </td>
+      {isLoading ? (
+        <Loader />
+      ) : isErrored && message ? (
+        <Message variant="danger">{message}</Message>
+      ) : (
+        <>
+          <ExpensesForm action="delete" />
+          {daysArray.map((day) => (
+            <div
+              key={day}
+              className={`my-3 p-3 ${
+                day === currentDay &&
+                monthNumber === currentMonth &&
+                selectedYear === currentYear
+                  ? "today"
+                  : ""
+              }`}
+            >
+              <Row className="my-3">
+                <Col>
+                  <strong>
+                    Date: {day} {selectedMonth} {selectedYear}
+                  </strong>
+                </Col>{" "}
+                <Col>Total Daily Income: </Col>{" "}
+                <Col>Total Daily Spending: RM {totalExpenses[day]} </Col>
+              </Row>
+              <Row>
+                <Table striped bordered hover size="sm">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>Details</th>
+                      <th>Category</th>
+                      <th>Price (RM)</th>
+                      <th>Payment Method</th>
+                      <th>Note</th>
+                      <th>Actions</th>
                     </tr>
-                  ))}
-              </tbody>
-            </Table>
-          </Row>
-        </div>
-      ))}
+                  </thead>
+                  <tbody>
+                    {expenses
+                      .filter(
+                        (expense) => new Date(expense.date).getDate() === day
+                      )
+                      .map((expense, index) => (
+                        <tr key={expense.id}>
+                          <td>{index + 1}</td>
+                          <td>{expense.detail}</td>
+                          <td>{expense.category}</td>
+                          <td>{expense.price}</td>
+                          <td>{expense.payment}</td>
+                          <td>{expense.note}</td>
+                          <td className="d-flex justify-content-center">
+                            <Button
+                              className="me-2"
+                              onClick={() => handleEdit(expense.id)}
+                            >
+                              <FaEdit />
+                            </Button>
 
+                            <Button onClick={() => handleDelete(expense.id)}>
+                              <FaTrashAlt />
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </Table>
+              </Row>
+            </div>
+          ))}
+        </>
+      )}
       {openExpenseForm && (
         <ExpensesForm
           action="edit"

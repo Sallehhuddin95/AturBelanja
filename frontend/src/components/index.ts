@@ -8,3 +8,4 @@ export { default as FormContainer } from "./FormContainer";
 export { default as ConfirmationDialog } from "./ConfirmationDialog";
 export { default as Loader } from "./Loader";
 export { default as ProtectedRoute } from "./ProtectedRoute";
+export { default as Message } from "./Message";
