@@ -4,7 +4,7 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { IncomesForm, ConfirmationDialog } from ".";
 import { useAppDispatch, useAppSelector } from "../app/hook";
 import { getIncomes } from "../features/income/incomeSlice";
-import { Loader } from "../components";
+import { Loader, Message } from "../components";
 
 const monthsList: string[] = [
   "January",
@@ -32,7 +32,7 @@ interface incomeRecord {
 
 function IncomesTable(props: any) {
   const dispatch = useAppDispatch();
-  const { incomes, isSuccess, isLoading } = useAppSelector(
+  const { incomes, isSuccess, isLoading, isError, message } = useAppSelector(
     (state) => state.income.monthlyIncomes
   );
   const [openIncomeForm, setOpenIncomeForm] = useState<boolean>(false);
@@ -115,68 +115,77 @@ function IncomesTable(props: any) {
 
   return (
     <>
-      {isLoading && <Loader />}
-      <IncomesForm action="delete" />
-      {daysArray.map((day) => (
-        <div
-          key={day}
-          className={`my-3 p-3 ${
-            day === currentDay &&
-            monthNumber === currentMonth &&
-            selectedYear === currentYear
-              ? "today"
-              : ""
-          }`}
-        >
-          <Row className="my-3">
-            <Col>
-              <strong>
-                Date: {day} {selectedMonth} {selectedYear}
-              </strong>
-            </Col>{" "}
-            <Col>Total Daily Income: RM {totalIncomes[day]}</Col>{" "}
-          </Row>
-          <Row>
-            <Table striped bordered hover size="sm">
-              <thead>
-                <tr>
-                  <th>No.</th>
-                  <th>Amount (RM)</th>
-                  <th>Category</th>
-                  <th>Payment Method</th>
-                  <th>Note</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {incomes
-                  .filter((income) => new Date(income.date).getDate() === day)
-                  .map((income, index) => (
-                    <tr key={income.id}>
-                      <td>{index + 1}</td>
-                      <td>{income.category}</td>
-                      <td>{income.amount}</td>
-                      <td>{income.payment}</td>
-                      <td>{income.note}</td>
-                      <td className="d-flex justify-content-center">
-                        <Button
-                          className="me-2"
-                          onClick={() => handleEdit(income.id)}
-                        >
-                          <FaEdit />
-                        </Button>
-
-                        <Button onClick={() => handleDelete(income.id)}>
-                          <FaTrashAlt />
-                        </Button>
-                      </td>
+      {isLoading ? (
+        <Loader />
+      ) : isError && message ? (
+        <Message variant="danger">{message}</Message>
+      ) : (
+        <>
+          <IncomesForm action="delete" />
+          {daysArray.map((day) => (
+            <div
+              key={day}
+              className={`my-3 p-3 ${
+                day === currentDay &&
+                monthNumber === currentMonth &&
+                selectedYear === currentYear
+                  ? "today"
+                  : ""
+              }`}
+            >
+              <Row className="my-3">
+                <Col>
+                  <strong>
+                    Date: {day} {selectedMonth} {selectedYear}
+                  </strong>
+                </Col>{" "}
+                <Col>Total Daily Income: RM {totalIncomes[day]}</Col>{" "}
+              </Row>
+              <Row>
+                <Table striped bordered hover size="sm">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>Amount (RM)</th>
+                      <th>Category</th>
+                      <th>Payment Method</th>
+                      <th>Note</th>
+                      <th>Actions</th>
                     </tr>
-                  ))}
-              </tbody>
-            </Table>
-          </Row>
-        </div>
-      ))}
+                  </thead>
+                  <tbody>
+                    {incomes
+                      .filter(
+                        (income) => new Date(income.date).getDate() === day
+                      )
+                      .map((income, index) => (
+                        <tr key={income.id}>
+                          <td>{index + 1}</td>
+                          <td>{income.category}</td>
+                          <td>{income.amount}</td>
+                          <td>{income.payment}</td>
+                          <td>{income.note}</td>
+                          <td className="d-flex justify-content-center">
+                            <Button
+                              className="me-2"
+                              onClick={() => handleEdit(income.id)}
+                            >
+                              <FaEdit />
+                            </Button>
+
+                            <Button onClick={() => handleDelete(income.id)}>
+                              <FaTrashAlt />
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </Table>
+              </Row>
+            </div>
+          ))}
+        </>
+      )}
 
       {openIncomeForm && (
         <IncomesForm

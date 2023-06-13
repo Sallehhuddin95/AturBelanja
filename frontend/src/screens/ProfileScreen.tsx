@@ -7,12 +7,19 @@ import {
   resetUpdateUser,
   getUser,
 } from "../features/user/userSlice";
+import { Loader, Message } from "../components";
 
 function ProfileScreen() {
   const dispatch = useAppDispatch();
 
   //get current user info
-  const { user } = useAppSelector((state) => state.user.getUser);
+  const {
+    user,
+    isSuccess: getSuccess,
+    isError,
+    message,
+    isLoading,
+  } = useAppSelector((state) => state.user.getUser);
   const { isSuccess } = useAppSelector((state) => state.user.updateUser);
   const [imageLink, setImageLink] = useState<string>("");
 
@@ -58,71 +65,76 @@ function ProfileScreen() {
     }
   }, [isSuccess, dispatch, name, user?.id]);
 
+  //get user when first render
+  useEffect(() => {
+    dispatch(getUser(user?.id));
+  }, [dispatch, user?.id]);
+
   return (
     <Container>
       <h3 className="text-center">Profile</h3>
-      <Row className="mt-5">
-        <Col md={3}>
-          <h4>Profile Picture</h4>
-          {imageLink ? (
-            <Image src={imageLink} roundedCircle />
-          ) : (
-            <FaUserCircle size={70} />
-          )}
-        </Col>
-        <Col md={9}>
-          <h4>My Info</h4>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="name" className="mb-3">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="name"
-                placeholder="Enter your name"
-                value={name}
-                onChange={handleChange}
-              />
-            </Form.Group>
+      {isLoading ? (
+        <Loader />
+      ) : isError && message ? (
+        <Message variant="danger">{message}</Message>
+      ) : (
+        <>
+          <Row className="mt-5">
+            <Col md={3}>
+              <h4>Profile Picture</h4>
+              {imageLink ? (
+                <Image src={imageLink} roundedCircle />
+              ) : (
+                <FaUserCircle size={70} />
+              )}
+            </Col>
+            <Col md={9}>
+              <h4>My Info</h4>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group controlId="name" className="mb-3">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    placeholder="Enter your name"
+                    value={name}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
 
-            <Form.Group controlId="email" className="mb-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                value={user?.email}
-                placeholder="Enter your email"
-                readOnly
-                style={{ backgroundColor: "#f8f9fa", cursor: "not-allowed" }}
-              />
-            </Form.Group>
+                <Form.Group controlId="email" className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    value={user?.email}
+                    placeholder="Enter your email"
+                    readOnly
+                    style={{
+                      backgroundColor: "#f8f9fa",
+                      cursor: "not-allowed",
+                    }}
+                  />
+                </Form.Group>
+                <Form.Group controlId="password" className="mb-3">
+                  <Form.Label>Change Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
 
-            {/* <Form.Group controlId="bio">
-              <Form.Label>Bio</Form.Label>
-              <Form.Control
-                as="textarea"
-                placeholder="Write a short bio"
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-              />
-            </Form.Group> */}
-
-            <Form.Group controlId="password" className="mb-3">
-              <Form.Label>Change Password</Form.Label>
-              <Form.Control
-                type="password"
-                name="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={handleChange}
-              />
-            </Form.Group>
-
-            <Button type="submit" variant="primary">
-              Save Changes
-            </Button>
-          </Form>
-        </Col>
-      </Row>
+                <Button type="submit" variant="primary">
+                  Save Changes
+                </Button>
+              </Form>
+            </Col>
+          </Row>
+        </>
+      )}
     </Container>
   );
 }

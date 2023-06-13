@@ -215,72 +215,72 @@ const userSlice = createSlice({
       .addCase(registerUser.pending, (state) => {
         state.registerUser.isLoading = true;
       })
-      .addCase(registerUser.fulfilled, (state, { payload }) => {
+      .addCase(registerUser.fulfilled, (state, action) => {
         state.registerUser.isLoading = false;
         state.registerUser.isSuccess = true;
-        state.registerUser.user = payload;
+        state.registerUser.user = action.payload;
         state.registerUser.isLoggedIn = true;
       })
-      .addCase(registerUser.rejected, (state, { payload }) => {
+      .addCase(registerUser.rejected, (state, action) => {
         state.registerUser.isLoading = false;
         state.registerUser.isError = true;
-        state.registerUser.message = "Error: " + payload;
+        state.registerUser.message = "Error: " + action.payload;
       })
       .addCase(loginUser.pending, (state) => {
         state.loginUser.isLoading = true;
       })
-      .addCase(loginUser.fulfilled, (state, { payload }) => {
+      .addCase(loginUser.fulfilled, (state, action) => {
         state.loginUser.isLoading = false;
         state.loginUser.isSuccess = true;
-        state.loginUser.user = payload;
+        state.loginUser.user = action.payload;
         state.loginUser.isLoggedIn = true;
       })
-      .addCase(loginUser.rejected, (state, { payload }) => {
+      .addCase(loginUser.rejected, (state, action) => {
         state.loginUser.isLoading = false;
         state.loginUser.isError = true;
-        state.loginUser.message = "Error: " + payload;
+        state.loginUser.message = "Error: " + action.payload;
       })
       .addCase(logoutUser.pending, (state) => {
         state.logoutUser.isLoading = true;
       })
-      .addCase(logoutUser.fulfilled, (state, { payload }) => {
+      .addCase(logoutUser.fulfilled, (state, action) => {
         state.logoutUser.isLoading = false;
         state.logoutUser.isSuccess = true;
         state.logoutUser.isLoggedIn = false;
         state.loginUser.isLoggedIn = false;
       })
-      .addCase(logoutUser.rejected, (state, { payload }) => {
+      .addCase(logoutUser.rejected, (state, action) => {
         state.logoutUser.isLoading = false;
         state.logoutUser.isError = true;
-        state.logoutUser.message = "Error: " + payload;
+        state.logoutUser.message = "Error: " + action.payload;
       })
       .addCase(updateUser.pending, (state) => {
         state.updateUser.isLoading = true;
       })
 
-      .addCase(updateUser.fulfilled, (state, { payload }) => {
+      .addCase(updateUser.fulfilled, (state, action) => {
         state.updateUser.isLoading = false;
         state.updateUser.isSuccess = true;
-        state.updateUser.user = payload;
+        state.updateUser.user = action.payload;
         state.updateUser.isLoggedIn = true;
       })
-      .addCase(updateUser.rejected, (state, { payload }) => {
+      .addCase(updateUser.rejected, (state, action) => {
         state.updateUser.isLoading = false;
         state.updateUser.isError = true;
-        state.updateUser.message = "Error: " + payload;
+        state.updateUser.message = "Error: " + action.payload;
       })
       .addCase(getUser.pending, (state) => {
         state.getUser.isLoading = true;
       })
-      .addCase(getUser.fulfilled, (state, { payload }) => {
+      .addCase(getUser.fulfilled, (state, action) => {
         state.getUser.isLoading = false;
         state.getUser.isSuccess = true;
-        state.getUser.user = payload;
+        state.getUser.user = action.payload;
       })
-      .addCase(getUser.rejected, (state, { payload }) => {
+      .addCase(getUser.rejected, (state, action) => {
         state.getUser.isLoading = false;
         state.getUser.isError = true;
-        state.getUser.message = "Error: " + payload;
+        state.getUser.message = "Error: " + action.payload;
       });
   },
 });

@@ -18,28 +18,28 @@ type ExpenseState = {
     isLoading: boolean;
     isErrored: boolean;
     isSuccess: boolean;
-    errorMessage: string;
+    message: string | null;
   };
   addedExpense: {
     expense: Expense[];
     isLoading: boolean;
     isErrored: boolean;
     isSuccess: boolean;
-    errorMessage: string;
+    message: string | null;
   };
   deletedExpense: {
     expense: Expense[];
     isLoading: boolean;
     isErrored: boolean;
     isSuccess: boolean;
-    errorMessage: string;
+    message: string | null;
   };
   editedExpense: {
     expense: Expense[];
     isLoading: boolean;
     isErrored: boolean;
     isSuccess: boolean;
-    errorMessage: string;
+    message: string | null;
   };
 };
 
@@ -49,28 +49,28 @@ const initialState: ExpenseState = {
     isLoading: false,
     isErrored: false,
     isSuccess: false,
-    errorMessage: "",
+    message: "",
   },
   addedExpense: {
     expense: [],
     isLoading: false,
     isErrored: false,
     isSuccess: false,
-    errorMessage: "",
+    message: "",
   },
   deletedExpense: {
     expense: [],
     isLoading: false,
     isErrored: false,
     isSuccess: false,
-    errorMessage: "",
+    message: "",
   },
   editedExpense: {
     expense: [],
     isLoading: false,
     isErrored: false,
     isSuccess: false,
-    errorMessage: "",
+    message: "",
   },
 };
 
@@ -163,7 +163,7 @@ export const expenseSlice = createSlice({
       .addCase(getExpenses.rejected, (state, action) => {
         state.monthlyExpenses.isLoading = false;
         state.monthlyExpenses.isErrored = true;
-        state.monthlyExpenses.errorMessage = "Error fetching expenses";
+        state.monthlyExpenses.message = "Error: " + action.payload;
       })
       .addCase(addExpense.pending, (state, action) => {
         state.addedExpense.isLoading = true;
@@ -177,7 +177,7 @@ export const expenseSlice = createSlice({
       .addCase(addExpense.rejected, (state, action) => {
         state.addedExpense.isLoading = false;
         state.addedExpense.isErrored = true;
-        state.addedExpense.errorMessage = "Error adding expense";
+        state.addedExpense.message = "Error: " + action.payload;
       })
       .addCase(deleteExpense.pending, (state, action) => {
         state.deletedExpense.isLoading = true;
@@ -190,7 +190,7 @@ export const expenseSlice = createSlice({
       .addCase(deleteExpense.rejected, (state, action) => {
         state.deletedExpense.isLoading = false;
         state.deletedExpense.isErrored = true;
-        state.deletedExpense.errorMessage = "Error deleting expense";
+        state.deletedExpense.message = "Error: " + action.payload;
       })
       .addCase(editExpense.pending, (state, action) => {
         state.editedExpense.isLoading = true;
@@ -204,7 +204,7 @@ export const expenseSlice = createSlice({
       .addCase(editExpense.rejected, (state, action) => {
         state.editedExpense.isLoading = false;
         state.editedExpense.isErrored = true;
-        state.editedExpense.errorMessage = "Error editing expense";
+        state.editedExpense.message = "Error: " + action.payload;
       });
   },
 });
