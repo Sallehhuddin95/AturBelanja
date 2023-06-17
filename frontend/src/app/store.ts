@@ -2,6 +2,7 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import expenseReducer from "../features/expense/expenseSlice";
 import incomeReducer from "../features/income/incomeSlice";
 import userReducer from "../features/user/userSlice";
+import budgetReducer from "../features/budget/budgetSlice";
 
 const store = configureStore({
   reducer: {
@@ -9,6 +10,7 @@ const store = configureStore({
     expense: expenseReducer,
     income: incomeReducer,
     user: userReducer,
+    budget: budgetReducer,
   },
 });
 

@@ -12,6 +12,7 @@ function Loader() {
           width: "5rem",
           margin: "auto",
           display: "block",
+          zIndex: 9999,
         }}
       />
       <span>Loading...</span>
