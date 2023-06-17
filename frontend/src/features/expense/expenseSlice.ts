@@ -16,28 +16,28 @@ type ExpenseState = {
   monthlyExpenses: {
     expenses: Expense[];
     isLoading: boolean;
-    isErrored: boolean;
+    isError: boolean;
     isSuccess: boolean;
     message: string | null;
   };
   addedExpense: {
     expense: Expense[];
     isLoading: boolean;
-    isErrored: boolean;
+    isError: boolean;
     isSuccess: boolean;
     message: string | null;
   };
   deletedExpense: {
     expense: Expense[];
     isLoading: boolean;
-    isErrored: boolean;
+    isError: boolean;
     isSuccess: boolean;
     message: string | null;
   };
   editedExpense: {
     expense: Expense[];
     isLoading: boolean;
-    isErrored: boolean;
+    isError: boolean;
     isSuccess: boolean;
     message: string | null;
   };
@@ -47,28 +47,28 @@ const initialState: ExpenseState = {
   monthlyExpenses: {
     expenses: [],
     isLoading: false,
-    isErrored: false,
+    isError: false,
     isSuccess: false,
     message: "",
   },
   addedExpense: {
     expense: [],
     isLoading: false,
-    isErrored: false,
+    isError: false,
     isSuccess: false,
     message: "",
   },
   deletedExpense: {
     expense: [],
     isLoading: false,
-    isErrored: false,
+    isError: false,
     isSuccess: false,
     message: "",
   },
   editedExpense: {
     expense: [],
     isLoading: false,
-    isErrored: false,
+    isError: false,
     isSuccess: false,
     message: "",
   },
@@ -162,7 +162,7 @@ export const expenseSlice = createSlice({
       })
       .addCase(getExpenses.rejected, (state, action) => {
         state.monthlyExpenses.isLoading = false;
-        state.monthlyExpenses.isErrored = true;
+        state.monthlyExpenses.isError = true;
         state.monthlyExpenses.message = "Error: " + action.payload;
       })
       .addCase(addExpense.pending, (state, action) => {
@@ -176,7 +176,7 @@ export const expenseSlice = createSlice({
       })
       .addCase(addExpense.rejected, (state, action) => {
         state.addedExpense.isLoading = false;
-        state.addedExpense.isErrored = true;
+        state.addedExpense.isError = true;
         state.addedExpense.message = "Error: " + action.payload;
       })
       .addCase(deleteExpense.pending, (state, action) => {
@@ -189,7 +189,7 @@ export const expenseSlice = createSlice({
       })
       .addCase(deleteExpense.rejected, (state, action) => {
         state.deletedExpense.isLoading = false;
-        state.deletedExpense.isErrored = true;
+        state.deletedExpense.isError = true;
         state.deletedExpense.message = "Error: " + action.payload;
       })
       .addCase(editExpense.pending, (state, action) => {
@@ -203,7 +203,7 @@ export const expenseSlice = createSlice({
 
       .addCase(editExpense.rejected, (state, action) => {
         state.editedExpense.isLoading = false;
-        state.editedExpense.isErrored = true;
+        state.editedExpense.isError = true;
         state.editedExpense.message = "Error: " + action.payload;
       });
   },

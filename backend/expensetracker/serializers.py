@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import DailyExpense, DailyIncome
+from .models import DailyExpense, DailyIncome, MonthlyBudget
 
 
 # User serializer
@@ -50,4 +50,10 @@ class DailyExpenseSerializer(serializers.ModelSerializer):
 class DailyIncomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = DailyIncome
+        fields = '__all__'
+
+
+class MonthlyBudgetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MonthlyBudget
         fields = '__all__'

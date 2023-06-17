@@ -63,3 +63,121 @@ export const dummyExpenses: Expense[] = [
     note: "",
   },
 ];
+
+export const dummyBudgets = [];
+
+////budget
+
+interface BudgetCategory {
+  id: number;
+  name: string;
+  budget: number;
+}
+
+interface BudgetMonth {
+  year: number;
+  month: string;
+  categories: BudgetCategory[];
+}
+
+interface BudgetData {
+  budgets: BudgetMonth[];
+}
+
+export const budgetData: BudgetData = {
+  budgets: [
+    {
+      year: 2023,
+      month: "January",
+      categories: [
+        {
+          id: 1,
+          name: "Transportation",
+          budget: 200,
+        },
+        {
+          id: 2,
+          name: "Groceries",
+          budget: 300,
+        },
+        {
+          id: 3,
+          name: "Entertainment",
+          budget: 100,
+        },
+        {
+          id: 4,
+          name: "Utilities",
+          budget: 150,
+        },
+        {
+          id: 5,
+          name: "Dining Out",
+          budget: 200,
+        },
+      ],
+    },
+    {
+      year: 2023,
+      month: "February",
+      categories: [
+        {
+          id: 1,
+          name: "Transportation",
+          budget: 200,
+        },
+        {
+          id: 2,
+          name: "Groceries",
+          budget: 300,
+        },
+        {
+          id: 3,
+          name: "Entertainment",
+          budget: 100,
+        },
+        {
+          id: 4,
+          name: "Utilities",
+          budget: 150,
+        },
+        {
+          id: 5,
+          name: "Dining Out",
+          budget: 200,
+        },
+      ],
+    },
+    {
+      year: 2023,
+      month: "March",
+      categories: [
+        {
+          id: 1,
+          name: "Transportation",
+          budget: 200,
+        },
+        {
+          id: 2,
+          name: "Groceries",
+          budget: 300,
+        },
+        {
+          id: 3,
+          name: "Entertainment",
+          budget: 100,
+        },
+        {
+          id: 4,
+          name: "Utilities",
+          budget: 150,
+        },
+        {
+          id: 5,
+          name: "Dining Out",
+          budget: 200,
+        },
+      ],
+    },
+  ],
+};

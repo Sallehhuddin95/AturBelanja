@@ -33,7 +33,7 @@ interface expenseRecord {
 
 function ExpensesTable(props: any) {
   const dispatch = useAppDispatch();
-  const { expenses, isSuccess, isLoading, isErrored, message } = useAppSelector(
+  const { expenses, isSuccess, isLoading, isError, message } = useAppSelector(
     (state) => state.expense.monthlyExpenses
   );
 
@@ -120,7 +120,7 @@ function ExpensesTable(props: any) {
     <>
       {isLoading ? (
         <Loader />
-      ) : isErrored && message ? (
+      ) : isError && message ? (
         <Message variant="danger">{message}</Message>
       ) : (
         <>

@@ -32,3 +32,15 @@ class DailyIncome(models.Model):
 
     def __str__(self):
         return self.note[0:50]
+
+
+class MonthlyBudget(models.Model):
+    userId = models.IntegerField(default=0)
+    month = models.IntegerField()
+    year = models.IntegerField()
+    budget = models.FloatField()
+    category = models.CharField(default='', max_length=100)
+    note = models.TextField()
+
+    def __str__(self):
+        return self.category[0:50]
