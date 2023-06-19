@@ -24,6 +24,7 @@ export const expenseCategories: string[] = [
   "Entertainment",
   "Healthcare",
   "Education",
+  "Others",
 ];
 
 // Define an array of income categories

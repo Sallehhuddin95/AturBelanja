@@ -49,6 +49,7 @@ export const getMonthlyBudgets = createAsyncThunk(
   async (data: any, thunkAPI: any) => {
     try {
       const token = thunkAPI.getState().user.loginUser.user?.token;
+      console.log("token", token);
       return await budgetService.getBudgets(data, token);
     } catch (error: Error | any) {
       const message =
@@ -64,9 +65,10 @@ export const getMonthlyBudgets = createAsyncThunk(
 
 export const addBudget = createAsyncThunk(
   "budgets/addBudget",
-  async (data: any, thunkAPI) => {
+  async (data: any, thunkAPI: any) => {
     try {
-      return await budgetService.addBudget(data);
+      const token = thunkAPI.getState().user.loginUser.user?.token;
+      return await budgetService.addBudget(data, token);
     } catch (error: Error | any) {
       const message =
         (error.response &&
@@ -83,9 +85,8 @@ const budgetSlice = createSlice({
   name: "budgets",
   initialState,
   reducers: {
-    reset(state) {
+    resetMonthlyBudgets: (state) => {
       state.monthlyBudgets = initialState.monthlyBudgets;
-      state.addedBudget = initialState.addedBudget;
     },
   },
   extraReducers: (builder) => {
@@ -119,6 +120,6 @@ const budgetSlice = createSlice({
   },
 });
 
-export const { reset } = budgetSlice.actions;
+export const { resetMonthlyBudgets } = budgetSlice.actions;
 export const selectBudgets = (state: RootState) => state.budget.monthlyBudgets;
 export default budgetSlice.reducer;
