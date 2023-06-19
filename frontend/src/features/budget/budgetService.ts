@@ -17,8 +17,16 @@ const getBudgets = async (data: any, token: any) => {
   return response.data;
 };
 
-const addBudget = async (data: any) => {
-  const response = await axios.post(`${API_URL}add/`, data);
+const addBudget = async (data: any, token: any) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  console.log("data", token);
+  const response = await axios.post(`${API_URL}add/`, data, config);
   return response.data;
 };
 

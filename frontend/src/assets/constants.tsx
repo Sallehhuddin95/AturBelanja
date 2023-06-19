@@ -12,3 +12,14 @@ export const monthsName: { id: number; name: string }[] = [
   { id: 11, name: "November" },
   { id: 12, name: "December" },
 ];
+
+export const budgetCategories: string[] = [
+  "Food",
+  "Transportation",
+  "Housing",
+  "Utilities",
+  "Entertainment",
+  "Healthcare",
+  "Education",
+  "Others",
+];

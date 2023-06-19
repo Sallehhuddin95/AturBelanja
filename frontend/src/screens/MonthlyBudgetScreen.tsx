@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { BudgetsTable } from "../components";
+import { BudgetsTable, BudgetsForm } from "../components";
 import { monthsName } from "../assets/constants";
 
 function MonthlyBudgetScreen() {
@@ -17,6 +17,7 @@ function MonthlyBudgetScreen() {
 
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth);
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const [openBudgetForm, setOpenBudgetForm] = useState<boolean>(false);
 
   const handleMonthChange = (e: any) => {
     e.preventDefault();
@@ -28,6 +29,10 @@ function MonthlyBudgetScreen() {
     setSelectedYear(e.target.value);
   };
 
+  const handleOpenForm = () => {
+    setOpenBudgetForm(true);
+  };
+
   return (
     <Container className="d-flex flex-column py-3">
       <Row>
@@ -36,7 +41,12 @@ function MonthlyBudgetScreen() {
       <Row className="my-2">
         <Col md={2}>
           {" "}
-          <Button>Add New</Button>
+          <Button onClick={handleOpenForm}>Add New</Button>
+          <BudgetsForm
+            action="add"
+            show={openBudgetForm}
+            onHide={() => setOpenBudgetForm(false)}
+          />
         </Col>
         <Col>
           {" "}

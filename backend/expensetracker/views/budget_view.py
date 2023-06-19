@@ -7,6 +7,7 @@ from ..serializers import MonthlyBudgetSerializer
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def getBudgetByMonthAndYear(request):
     month = request.GET.get('month')
     year = request.GET.get('year')
@@ -18,6 +19,7 @@ def getBudgetByMonthAndYear(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def addBudget(request):
     budget = MonthlyBudget.objects.create(
         userId=request.data.get('userId'),

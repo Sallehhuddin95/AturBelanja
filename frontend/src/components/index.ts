@@ -10,3 +10,4 @@ export { default as Loader } from "./Loader";
 export { default as ProtectedRoute } from "./ProtectedRoute";
 export { default as Message } from "./Message";
 export { default as BudgetsTable } from "./BudgetsTable";
+export { default as BudgetsForm } from "./BudgetsForm";

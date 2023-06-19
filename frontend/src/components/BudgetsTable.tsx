@@ -12,7 +12,7 @@ function BudgetsTable(props: any) {
   const user = localStorage.getItem("user");
   const { id: userId } = JSON.parse(user || "{}");
   const monthNumber = monthsName.find((m) => m.name === selectedMonth)?.id;
-  const { budgets, isLoading, isError, message } = useAppSelector(
+  const { budgets, isLoading, isSuccess, isError, message } = useAppSelector(
     (state) => state.budget.monthlyBudgets
   );
 
@@ -20,7 +20,7 @@ function BudgetsTable(props: any) {
     dispatch(
       getMonthlyBudgets({ month: monthNumber, year: selectedYear, userId })
     );
-  }, [dispatch, selectedMonth, selectedYear, monthNumber, userId]);
+  }, [dispatch, selectedMonth, selectedYear, monthNumber, userId, isSuccess]);
 
   const handleEdit = () => {
     console.log("edit");
