@@ -6,6 +6,7 @@ import {
   addExpense,
   editExpense,
   resetMonthlyExpense,
+  resetEditedExpense,
 } from "../features/expense/expenseSlice";
 
 function ExpensesForm(props: any) {
@@ -116,6 +117,7 @@ function ExpensesForm(props: any) {
   useEffect(() => {
     if (isSuccess || editSuccess) {
       dispatch(resetMonthlyExpense());
+      dispatch(resetEditedExpense());
     }
   }, [isSuccess, editSuccess, dispatch]);
 
