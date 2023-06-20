@@ -148,6 +148,15 @@ const incomeSlice = createSlice({
     resetMonthlyIncome: (state) => {
       state.monthlyIncomes = initialState.monthlyIncomes;
     },
+    resetAddedIncome: (state) => {
+      state.addedIncome = initialState.addedIncome;
+    },
+    resetEditedIncome: (state) => {
+      state.editedIncome = initialState.editedIncome;
+    },
+    resetDeletedIncome: (state) => {
+      state.deletedIncome = initialState.deletedIncome;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getIncomes.pending, (state) => {
@@ -205,6 +214,11 @@ const incomeSlice = createSlice({
   },
 });
 
-export const { resetMonthlyIncome } = incomeSlice.actions;
+export const {
+  resetMonthlyIncome,
+  resetAddedIncome,
+  resetDeletedIncome,
+  resetEditedIncome,
+} = incomeSlice.actions;
 export const selectIncomes = (state: RootState) => state.income.monthlyIncomes;
 export default incomeSlice.reducer;

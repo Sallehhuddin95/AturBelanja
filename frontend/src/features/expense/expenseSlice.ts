@@ -149,6 +149,15 @@ export const expenseSlice = createSlice({
     resetMonthlyExpense: (state) => {
       state.monthlyExpenses = initialState.monthlyExpenses;
     },
+    resetAddedExpense: (state) => {
+      state.addedExpense = initialState.addedExpense;
+    },
+    resetDeletedExpense: (state) => {
+      state.deletedExpense = initialState.deletedExpense;
+    },
+    resetEditedExpense: (state) => {
+      state.editedExpense = initialState.editedExpense;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -209,7 +218,12 @@ export const expenseSlice = createSlice({
   },
 });
 
-export const { resetMonthlyExpense } = expenseSlice.actions;
+export const {
+  resetMonthlyExpense,
+  resetAddedExpense,
+  resetDeletedExpense,
+  resetEditedExpense,
+} = expenseSlice.actions;
 export const selectExpenses = (state: RootState) =>
   state.expense.monthlyExpenses;
 export default expenseSlice.reducer;
