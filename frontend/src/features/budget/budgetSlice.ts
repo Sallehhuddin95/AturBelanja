@@ -33,6 +33,13 @@ type BudgetState = {
     isSuccess: boolean;
     message: string | null;
   };
+  deletedBudget: {
+    budget: Budget[];
+    isLoading: boolean;
+    isError: boolean;
+    isSuccess: boolean;
+    message: string | null;
+  };
 };
 
 const initialState: BudgetState = {
@@ -51,6 +58,13 @@ const initialState: BudgetState = {
     message: "",
   },
   editedBudget: {
+    budget: [],
+    isLoading: false,
+    isError: false,
+    isSuccess: false,
+    message: "",
+  },
+  deletedBudget: {
     budget: [],
     isLoading: false,
     isError: false,
@@ -114,6 +128,24 @@ export const updateBudget = createAsyncThunk(
   }
 );
 
+export const deleteBudget = createAsyncThunk(
+  "budgets/deleteBudget",
+  async (data: any, thunkAPI: any) => {
+    try {
+      const token = thunkAPI.getState().user.loginUser.user?.token;
+      return await budgetService.deleteBudget(data, token);
+    } catch (error: Error | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const budgetSlice = createSlice({
   name: "budgets",
   initialState,
@@ -121,8 +153,14 @@ const budgetSlice = createSlice({
     resetMonthlyBudgets: (state) => {
       state.monthlyBudgets = initialState.monthlyBudgets;
     },
+    resetAddedBudget: (state) => {
+      state.addedBudget = initialState.addedBudget;
+    },
     resetEditedBudget: (state) => {
       state.editedBudget = initialState.editedBudget;
+    },
+    resetDeletedBudget: (state) => {
+      state.deletedBudget = initialState.deletedBudget;
     },
   },
   extraReducers: (builder) => {
@@ -165,10 +203,28 @@ const budgetSlice = createSlice({
         state.editedBudget.isLoading = false;
         state.editedBudget.isError = true;
         state.editedBudget.message = action.payload as string;
+      })
+      .addCase(deleteBudget.pending, (state) => {
+        state.deletedBudget.isLoading = true;
+      })
+      .addCase(deleteBudget.fulfilled, (state, action) => {
+        state.deletedBudget.isLoading = false;
+        state.deletedBudget.isSuccess = true;
+        state.deletedBudget.budget = action.payload;
+      })
+      .addCase(deleteBudget.rejected, (state, action) => {
+        state.deletedBudget.isLoading = false;
+        state.deletedBudget.isError = true;
+        state.deletedBudget.message = action.payload as string;
       });
   },
 });
 
-export const { resetMonthlyBudgets, resetEditedBudget } = budgetSlice.actions;
+export const {
+  resetMonthlyBudgets,
+  resetAddedBudget,
+  resetDeletedBudget,
+  resetEditedBudget,
+} = budgetSlice.actions;
 export const selectBudgets = (state: RootState) => state.budget.monthlyBudgets;
 export default budgetSlice.reducer;

@@ -6,6 +6,7 @@ import {
   addIncome,
   editIncome,
   resetMonthlyIncome,
+  resetAddedIncome,
   resetEditedIncome,
 } from "../features/income/incomeSlice";
 
@@ -109,6 +110,7 @@ function IncomesForm(props: any) {
   useEffect(() => {
     if (addIncomeSuccess || editIncomeSuccess) {
       dispatch(resetMonthlyIncome());
+      dispatch(resetAddedIncome());
       dispatch(resetEditedIncome());
     }
   }, [addIncomeSuccess, editIncomeSuccess, dispatch]);
