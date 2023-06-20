@@ -54,6 +54,9 @@ class DailyIncomeSerializer(serializers.ModelSerializer):
 
 
 class MonthlyBudgetSerializer(serializers.ModelSerializer):
+    # allow Note to be blank
+    note = serializers.CharField(required=False, allow_blank=True)
+
     class Meta:
         model = MonthlyBudget
         fields = '__all__'

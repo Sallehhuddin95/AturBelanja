@@ -31,3 +31,13 @@ def addBudget(request):
     )
     serializer = MonthlyBudgetSerializer(budget, many=False)
     return Response(serializer.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateBudget(request, pk):
+    budget = MonthlyBudget.objects.get(id=pk)
+    serializer = MonthlyBudgetSerializer(instance=budget, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)

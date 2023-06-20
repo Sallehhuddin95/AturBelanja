@@ -24,15 +24,32 @@ const addBudget = async (data: any, token: any) => {
       Authorization: `Bearer ${token}`,
     },
   };
-
-  console.log("data", token);
   const response = await axios.post(`${API_URL}add/`, data, config);
+  return response.data;
+};
+
+const updateBudget = async (data: any, token: any) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  console.log("data", data.id);
+
+  const response = await axios.put(
+    `${API_URL}update/${data.id}/`,
+    data,
+    config
+  );
   return response.data;
 };
 
 const budgetService = {
   getBudgets,
   addBudget,
+  updateBudget,
 };
 
 export default budgetService;
