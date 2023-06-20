@@ -3,6 +3,7 @@ import { RootState } from "../../app/store";
 import budgetService from "./budgetService";
 
 type Budget = {
+  id: string;
   month: number;
   year: number;
   category: string;
@@ -19,6 +20,13 @@ type BudgetState = {
     message: string | null;
   };
   addedBudget: {
+    budget: Budget[];
+    isLoading: boolean;
+    isError: boolean;
+    isSuccess: boolean;
+    message: string | null;
+  };
+  editedBudget: {
     budget: Budget[];
     isLoading: boolean;
     isError: boolean;
@@ -42,6 +50,13 @@ const initialState: BudgetState = {
     isSuccess: false,
     message: "",
   },
+  editedBudget: {
+    budget: [],
+    isLoading: false,
+    isError: false,
+    isSuccess: false,
+    message: "",
+  },
 };
 
 export const getMonthlyBudgets = createAsyncThunk(
@@ -49,7 +64,7 @@ export const getMonthlyBudgets = createAsyncThunk(
   async (data: any, thunkAPI: any) => {
     try {
       const token = thunkAPI.getState().user.loginUser.user?.token;
-      console.log("token", token);
+      // console.log("token", token);
       return await budgetService.getBudgets(data, token);
     } catch (error: Error | any) {
       const message =
@@ -81,12 +96,33 @@ export const addBudget = createAsyncThunk(
   }
 );
 
+export const updateBudget = createAsyncThunk(
+  "budgets/updateBudget",
+  async (data: any, thunkAPI: any) => {
+    try {
+      const token = thunkAPI.getState().user.loginUser.user?.token;
+      return await budgetService.updateBudget(data, token);
+    } catch (error: Error | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const budgetSlice = createSlice({
   name: "budgets",
   initialState,
   reducers: {
     resetMonthlyBudgets: (state) => {
       state.monthlyBudgets = initialState.monthlyBudgets;
+    },
+    resetEditedBudget: (state) => {
+      state.editedBudget = initialState.editedBudget;
     },
   },
   extraReducers: (builder) => {
@@ -116,10 +152,23 @@ const budgetSlice = createSlice({
         state.addedBudget.isLoading = false;
         state.addedBudget.isError = true;
         state.addedBudget.message = action.payload as string;
+      })
+      .addCase(updateBudget.pending, (state) => {
+        state.editedBudget.isLoading = true;
+      })
+      .addCase(updateBudget.fulfilled, (state, action) => {
+        state.editedBudget.isLoading = false;
+        state.editedBudget.isSuccess = true;
+        state.editedBudget.budget = action.payload;
+      })
+      .addCase(updateBudget.rejected, (state, action) => {
+        state.editedBudget.isLoading = false;
+        state.editedBudget.isError = true;
+        state.editedBudget.message = action.payload as string;
       });
   },
 });
 
-export const { resetMonthlyBudgets } = budgetSlice.actions;
+export const { resetMonthlyBudgets, resetEditedBudget } = budgetSlice.actions;
 export const selectBudgets = (state: RootState) => state.budget.monthlyBudgets;
 export default budgetSlice.reducer;

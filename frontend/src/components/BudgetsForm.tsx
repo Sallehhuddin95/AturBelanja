@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "../app/hook";
-import { addBudget, resetMonthlyBudgets } from "../features/budget/budgetSlice";
+import {
+  addBudget,
+  updateBudget,
+  resetMonthlyBudgets,
+  resetEditedBudget,
+} from "../features/budget/budgetSlice";
 import { budgetCategories } from "../assets/constants";
 
 function BudgetsForm(props: any) {
   const dispatch = useAppDispatch();
-  const { action, expense } = props;
+  const { action, allocation } = props;
+  console.log("allocation: ", allocation);
   const { isSuccess } = useAppSelector((state) => state.budget.addedBudget);
+  const { isSuccess: editSuccess } = useAppSelector(
+    (state) => state.budget.editedBudget
+  );
 
   const user = localStorage.getItem("user");
   const { id: userId } = JSON.parse(user || "{}");
@@ -27,7 +36,7 @@ function BudgetsForm(props: any) {
   const [formTitle, setFormTitle] = useState<string>("");
   const [buttonTitle, setButtonTitle] = useState<string>("");
 
-  const { month, year, category, budget, note } = formData;
+  const { month, year, category, note, budget } = formData;
 
   const handleClose = () => {
     setFormData({
@@ -55,7 +64,17 @@ function BudgetsForm(props: any) {
             note,
           })
         )
-      : null;
+      : dispatch(
+          updateBudget({
+            id: allocation.id,
+            userId,
+            month,
+            year,
+            category,
+            budget,
+            note,
+          })
+        );
     handleClose();
   };
 
@@ -76,23 +95,27 @@ function BudgetsForm(props: any) {
       case "edit":
         setFormTitle("Edit Expense");
         setButtonTitle("Edit");
-        // setFormData({
-        //   month: month
-
-        // });
+        setFormData({
+          month: allocation.month,
+          year: allocation.year,
+          category: allocation.category,
+          budget: allocation.budget,
+          note: allocation.note,
+        });
         break;
       default:
         setFormTitle("Add New Budget");
         setButtonTitle("Add");
         break;
     }
-  }, [action, expense]);
+  }, [action, allocation]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess || editSuccess) {
       dispatch(resetMonthlyBudgets());
+      dispatch(resetEditedBudget());
     }
-  }, [isSuccess, dispatch]);
+  }, [isSuccess, dispatch, editSuccess]);
 
   return (
     <div>

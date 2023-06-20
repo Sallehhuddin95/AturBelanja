@@ -5,6 +5,7 @@ import { Loader, Message } from "../components";
 import { useAppSelector, useAppDispatch } from "../app/hook";
 import { getMonthlyBudgets } from "../features/budget/budgetSlice";
 import { monthsName } from "../assets/constants";
+import { BudgetsForm } from ".";
 
 function BudgetsTable(props: any) {
   const dispatch = useAppDispatch();
@@ -16,19 +17,33 @@ function BudgetsTable(props: any) {
     (state) => state.budget.monthlyBudgets
   );
 
+  const [openBudgetForm, setOpenBudgetForm] = useState<boolean>(false);
+  console.log("budgets: ", openBudgetForm);
+  const [selectedBudgetId, setSelectedBudgetId] = useState<string>("");
+
   useEffect(() => {
     dispatch(
       getMonthlyBudgets({ month: monthNumber, year: selectedYear, userId })
     );
+    setOpenBudgetForm(false);
   }, [dispatch, selectedMonth, selectedYear, monthNumber, userId, isSuccess]);
 
-  const handleEdit = () => {
-    console.log("edit");
+  const handleEdit = (id: string) => {
+    setSelectedBudgetId(id);
+    setOpenBudgetForm(true);
   };
 
-  const handleDelete = () => {
-    console.log("delete");
+  const handleDelete = (id: string) => {
+    console.log("delete", id);
   };
+
+  //reset openBudgetForm when modal is closed
+  useEffect(() => {
+    if (!openBudgetForm) {
+      setSelectedBudgetId("");
+    }
+  }, [openBudgetForm]);
+
   return (
     <>
       {isLoading && <Loader />}
@@ -45,18 +60,21 @@ function BudgetsTable(props: any) {
             </tr>
           </thead>
           <tbody>
-            {budgets.map((budget, index) => (
-              <tr key={index}>
+            {budgets.map((budget: any, index: any) => (
+              <tr key={budget.id}>
                 <td>{index + 1}</td>
                 <td>{budget.category}</td>
                 <td>{budget.budget}</td>
                 <td>{budget.note}</td>
                 <td className="d-flex justify-content-center">
-                  <Button className="me-2" onClick={() => handleEdit()}>
+                  <Button
+                    className="me-2"
+                    onClick={() => handleEdit(budget.id)}
+                  >
                     <FaEdit />
                   </Button>
 
-                  <Button onClick={() => handleDelete()}>
+                  <Button onClick={() => handleDelete(budget.id)}>
                     <FaTrashAlt />
                   </Button>
                 </td>
@@ -65,6 +83,14 @@ function BudgetsTable(props: any) {
           </tbody>
         </Table>
       </Row>
+      {openBudgetForm && (
+        <BudgetsForm
+          action="edit"
+          show={openBudgetForm}
+          allocation={budgets.find((b) => b.id === selectedBudgetId)}
+          onHide={() => setOpenBudgetForm(false)}
+        />
+      )}
     </>
   );
 }

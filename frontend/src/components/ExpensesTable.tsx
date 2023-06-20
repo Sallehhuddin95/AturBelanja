@@ -67,7 +67,6 @@ function ExpensesTable(props: any) {
   };
 
   const handleDelete = (id: string) => {
-    // console.log("Delete id: ", id);
     setSelectedExpenseId(id);
     setOpenConfirmationDialog(true);
   };
