@@ -36,8 +36,6 @@ const updateBudget = async (data: any, token: any) => {
     },
   };
 
-  console.log("data", data.id);
-
   const response = await axios.put(
     `${API_URL}update/${data.id}/`,
     data,
@@ -46,10 +44,23 @@ const updateBudget = async (data: any, token: any) => {
   return response.data;
 };
 
+const deleteBudget = async (data: any, token: any) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.delete(`${API_URL}delete/${data.id}/`, config);
+  return response.data;
+};
+
 const budgetService = {
   getBudgets,
   addBudget,
   updateBudget,
+  deleteBudget,
 };
 
 export default budgetService;

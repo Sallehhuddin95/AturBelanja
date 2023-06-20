@@ -5,6 +5,7 @@ import {
   addBudget,
   updateBudget,
   resetMonthlyBudgets,
+  resetAddedBudget,
   resetEditedBudget,
 } from "../features/budget/budgetSlice";
 import { budgetCategories } from "../assets/constants";
@@ -113,6 +114,7 @@ function BudgetsForm(props: any) {
   useEffect(() => {
     if (isSuccess || editSuccess) {
       dispatch(resetMonthlyBudgets());
+      dispatch(resetAddedBudget());
       dispatch(resetEditedBudget());
     }
   }, [isSuccess, dispatch, editSuccess]);

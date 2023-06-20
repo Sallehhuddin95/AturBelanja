@@ -4,8 +4,18 @@ import { useAppDispatch, useAppSelector } from "../app/hook";
 import {
   deleteExpense,
   resetMonthlyExpense,
+  resetDeletedExpense,
 } from "../features/expense/expenseSlice";
-import { deleteIncome } from "../features/income/incomeSlice";
+import {
+  deleteIncome,
+  resetMonthlyIncome,
+  resetDeletedIncome,
+} from "../features/income/incomeSlice";
+import {
+  deleteBudget,
+  resetMonthlyBudgets,
+  resetDeletedBudget,
+} from "../features/budget/budgetSlice";
 
 function ConfirmationDialog(props: any) {
   const dispatch = useAppDispatch();
@@ -14,6 +24,10 @@ function ConfirmationDialog(props: any) {
   );
   const { isSuccess: delIncomeSuccess } = useAppSelector(
     (state) => state.income.deletedIncome
+  );
+
+  const { isSuccess: delBudgetSuccess } = useAppSelector(
+    (state) => state.budget.deletedBudget
   );
   const [text, setText] = useState<string>("");
   const { action, id, itemType } = props;
@@ -24,11 +38,23 @@ function ConfirmationDialog(props: any) {
 
   const handleYes = (e: any) => {
     e.preventDefault();
-    itemType === "income"
-      ? dispatch(deleteIncome({ id }))
-      : itemType === "expense"
-      ? dispatch(deleteExpense({ id }))
-      : null;
+
+    if (itemType === "income") {
+      dispatch(deleteIncome({ id }));
+      dispatch(resetDeletedIncome());
+      dispatch(resetMonthlyIncome());
+    } else if (itemType === "expense") {
+      dispatch(deleteExpense({ id }));
+      dispatch(resetDeletedExpense());
+      dispatch(resetMonthlyExpense());
+    } else if (itemType === "budget") {
+      dispatch(deleteBudget({ id }));
+      dispatch(resetDeletedBudget());
+      dispatch(resetMonthlyBudgets());
+    } else {
+      null;
+    }
+
     props.onHide();
   };
 
@@ -40,20 +66,28 @@ function ConfirmationDialog(props: any) {
       case "expense":
         setText("Expense");
         break;
-
+      case "budget":
+        setText("Budget");
+        break;
       default:
         break;
     }
   }, [itemType]);
 
-  useEffect(() => {
-    if (delExpenseSuccess) {
-      dispatch(resetMonthlyExpense());
-    }
-    if (delIncomeSuccess) {
-      dispatch(resetMonthlyExpense());
-    }
-  }, [delExpenseSuccess, delIncomeSuccess, dispatch]);
+  // useEffect(() => {
+  //   if (delExpenseSuccess) {
+  //     dispatch(resetDeletedExpense());
+  //     dispatch(resetMonthlyExpense());
+  //   }
+  //   if (delIncomeSuccess) {
+  //     dispatch(resetDeletedIncome());
+  //     dispatch(resetMonthlyIncome());
+  //   }
+  //   if (delBudgetSuccess) {
+  //     dispatch(resetDeletedBudget());
+  //     dispatch(resetMonthlyBudgets());
+  //   }
+  // }, [delExpenseSuccess, delIncomeSuccess, dispatch, delBudgetSuccess]);
 
   return (
     <>
@@ -62,7 +96,7 @@ function ConfirmationDialog(props: any) {
           <Modal.Title>Delete {text}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure want to delete this {text.toLowerCase()}
+          Are you sure want to delete this {text.toLowerCase()} ?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleYes}>

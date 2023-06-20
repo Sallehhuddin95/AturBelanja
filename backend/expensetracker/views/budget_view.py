@@ -41,3 +41,11 @@ def updateBudget(request, pk):
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteBudget(request, pk):
+    budget = MonthlyBudget.objects.get(id=pk)
+    budget.delete()
+    return Response('Budget item deleted')

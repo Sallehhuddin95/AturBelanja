@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Table, Row, Col, Button } from "react-bootstrap";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { Loader, Message } from "../components";
+import { Loader, Message, ConfirmationDialog } from "../components";
 import { useAppSelector, useAppDispatch } from "../app/hook";
 import { getMonthlyBudgets } from "../features/budget/budgetSlice";
 import { monthsName } from "../assets/constants";
@@ -18,7 +18,8 @@ function BudgetsTable(props: any) {
   );
 
   const [openBudgetForm, setOpenBudgetForm] = useState<boolean>(false);
-  console.log("budgets: ", openBudgetForm);
+  const [openConfirmationDialog, setOpenConfirmationDialog] =
+    useState<boolean>(false);
   const [selectedBudgetId, setSelectedBudgetId] = useState<string>("");
 
   useEffect(() => {
@@ -34,15 +35,9 @@ function BudgetsTable(props: any) {
   };
 
   const handleDelete = (id: string) => {
-    console.log("delete", id);
+    setSelectedBudgetId(id);
+    setOpenConfirmationDialog(true);
   };
-
-  //reset openBudgetForm when modal is closed
-  useEffect(() => {
-    if (!openBudgetForm) {
-      setSelectedBudgetId("");
-    }
-  }, [openBudgetForm]);
 
   return (
     <>
@@ -89,6 +84,15 @@ function BudgetsTable(props: any) {
           show={openBudgetForm}
           allocation={budgets.find((b) => b.id === selectedBudgetId)}
           onHide={() => setOpenBudgetForm(false)}
+        />
+      )}
+      {openConfirmationDialog && (
+        <ConfirmationDialog
+          show={openConfirmationDialog}
+          onHide={() => setOpenConfirmationDialog(false)}
+          id={selectedBudgetId}
+          itemType="budget"
+          action="delete"
         />
       )}
     </>
