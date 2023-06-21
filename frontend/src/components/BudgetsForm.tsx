@@ -29,7 +29,7 @@ function BudgetsForm(props: any) {
   const [formData, setFormData] = useState({
     month: currentMonth,
     year: currentYear,
-    category: "",
+    category: "Food",
     budget: "",
     note: "",
   });
@@ -43,7 +43,7 @@ function BudgetsForm(props: any) {
     setFormData({
       month: currentMonth,
       year: currentYear,
-      category: "",
+      category: "Food",
       budget: "",
       note: "",
     });
