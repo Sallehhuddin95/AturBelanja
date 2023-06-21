@@ -21,13 +21,26 @@ function BudgetsTable(props: any) {
   const [openConfirmationDialog, setOpenConfirmationDialog] =
     useState<boolean>(false);
   const [selectedBudgetId, setSelectedBudgetId] = useState<string>("");
+  const [totalBudget, setTotalBudget] = useState<number>(0);
 
   useEffect(() => {
     dispatch(
       getMonthlyBudgets({ month: monthNumber, year: selectedYear, userId })
     );
+
     setOpenBudgetForm(false);
   }, [dispatch, selectedMonth, selectedYear, monthNumber, userId, isSuccess]);
+
+  useEffect(() => {
+    // Calculate total budget
+    const calculateTotalBudget = () => {
+      const total = budgets.reduce((acc: number, budget: any) => {
+        return acc + budget.budget;
+      }, 0);
+      setTotalBudget(total);
+    };
+    calculateTotalBudget();
+  }, [budgets]);
 
   const handleEdit = (id: string) => {
     setSelectedBudgetId(id);
@@ -44,6 +57,9 @@ function BudgetsTable(props: any) {
       {isLoading && <Loader />}
       {isError && message && <Message variant="danger">{message}</Message>}
       <Row className="my-3">
+        <p>
+          <strong>Current Allocated Budgets: RM {totalBudget}</strong>
+        </p>
         <Table striped bordered hover size="sm">
           <thead>
             <tr>

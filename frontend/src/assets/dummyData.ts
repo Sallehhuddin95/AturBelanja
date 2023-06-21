@@ -3,8 +3,9 @@ export const paymentMethods: string[] = [
   "Credit Card",
   "Debit Card",
   "Cash",
-  "PayPal",
-  "Venmo",
+  "Account Transfer",
+  "E-Wallet",
+  "Others",
 ];
 
 // Define an array of income payment methods
