@@ -131,7 +131,7 @@ function BudgetsForm(props: any) {
               <Form.Label>Month</Form.Label>
               <Form.Control
                 type="number"
-                name="budgetMonth"
+                name="month"
                 placeholder="Enter month"
                 onChange={handleChange}
                 value={month}
@@ -141,7 +141,7 @@ function BudgetsForm(props: any) {
               <Form.Label>Year</Form.Label>
               <Form.Control
                 type="number"
-                name="budgetYear"
+                name="year"
                 placeholder="Enter year"
                 onChange={handleChange}
                 value={year}

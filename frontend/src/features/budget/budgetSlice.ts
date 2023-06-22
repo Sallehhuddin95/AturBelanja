@@ -273,7 +273,10 @@ const budgetSlice = createSlice({
         const budgets = action.payload;
         const uniqueBudgets = budgets.filter(
           (budget: any, index: number, self: any) =>
-            index === self.findIndex((b: any) => b.month === budget.month)
+            index ===
+            self.findIndex(
+              (b: any) => b.month === budget.month && b.year === budget.year
+            )
         );
         state.allBudgets.budgets = uniqueBudgets;
       })
