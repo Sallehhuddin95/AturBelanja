@@ -10,10 +10,21 @@ const getBudgets = async (data: any, token: any) => {
     params: data,
   };
 
-  console.log("data", data);
-
   const response = await axios.get(API_URL, config);
 
+  return response.data;
+};
+
+const getAllBudgets = async (data: any, token: any) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    params: data,
+  };
+
+  const response = await axios.get(`${API_URL}all/`, config);
   return response.data;
 };
 
@@ -58,6 +69,7 @@ const deleteBudget = async (data: any, token: any) => {
 
 const budgetService = {
   getBudgets,
+  getAllBudgets,
   addBudget,
   updateBudget,
   deleteBudget,

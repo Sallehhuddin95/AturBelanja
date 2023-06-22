@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from ..models import MonthlyBudget
-from ..serializers import MonthlyBudgetSerializer
+from ..serializers import MonthlyBudgetSerializer, MonthlyBudgetSerializerWithTotalBudget
 
 
 @api_view(['GET'])
@@ -15,6 +15,15 @@ def getBudgetByMonthAndYear(request):
     budget = MonthlyBudget.objects.filter(
         month=month, year=year, userId=userId)
     serializer = MonthlyBudgetSerializer(budget, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getTotalBudgets(request):
+    userId = request.GET.get('userId')
+    budgets = MonthlyBudget.objects.filter(userId=userId)
+    serializer = MonthlyBudgetSerializerWithTotalBudget(budgets, many=True)
     return Response(serializer.data)
 
 

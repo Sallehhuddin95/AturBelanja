@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from django.db.models import Sum
+from django.db.models.functions import TruncMonth
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import DailyExpense, DailyIncome, MonthlyBudget
 
@@ -60,3 +62,34 @@ class MonthlyBudgetSerializer(serializers.ModelSerializer):
     class Meta:
         model = MonthlyBudget
         fields = '__all__'
+
+# get all budget for a given month and year, calculate total budget, get created date, get updated date
+
+
+class MonthlyBudgetSerializerWithTotalBudget(MonthlyBudgetSerializer):
+    total_budget = serializers.SerializerMethodField(read_only=True)
+    created_at = serializers.SerializerMethodField(read_only=True)
+    updated_at = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = MonthlyBudget
+        fields = ('id', 'month', 'year', 'total_budget',
+                  'created_at', 'updated_at')
+
+    # get total budget for a given month and year
+    def get_total_budget(self, obj):
+        total_budget = MonthlyBudget.objects.filter(month=obj.month, year=obj.year).aggregate(
+            total_budget=Sum('budget')).get('total_budget')
+        return total_budget
+
+    # get created date. Created date is the date when the first budget is created for a given month and year
+    def get_created_at(self, obj):
+        created_at = MonthlyBudget.objects.filter(
+            month=obj.month, year=obj.year).order_by('created_at').first().created_at
+        return created_at
+
+    # get updated date. Updated date is the date when the last budget is updated for a given month and year
+    def get_updated_at(self, obj):
+        updated_at = MonthlyBudget.objects.filter(
+            month=obj.month, year=obj.year).order_by('updated_at').last().updated_at
+        return updated_at
