@@ -15,29 +15,29 @@ type DataItem = {
   id: number;
   month: number;
   year: number;
-  total_budget: number;
+  total_value: number;
   created_at: string;
   updated_at: string;
 };
 
 function BarGraph({ data }: { data: any }) {
-  // Step 1: Extract month and total_budget values
+  // Step 1: Extract month and total_value values
   const extractedData = data.map((item: DataItem) => ({
     month: item.month,
-    total_budget: item.total_budget,
+    total_value: item.total_value,
   }));
 
   // Step 2: Create an array of all months
   const allMonths = Array.from({ length: 12 }, (_, index) => index + 1);
 
-  // Step 3: Populate the data array with total_budget values
+  // Step 3: Populate the data array with total_value values
   const chartData = allMonths.map((month) => {
     const foundData = extractedData.find(
       (item: { month: number }) => item.month === month
     );
     return {
       month,
-      total_budget: foundData ? foundData.total_budget : 0,
+      total_value: foundData ? foundData.total_value : 0,
     };
   });
 
@@ -60,7 +60,7 @@ function BarGraph({ data }: { data: any }) {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="total_budget" fill="#82ca9d" />
+          <Bar dataKey="total_value" fill="#82ca9d" />
         </BarChart>
       </ResponsiveContainer>
     </div>
