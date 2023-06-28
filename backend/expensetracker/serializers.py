@@ -49,6 +49,45 @@ class DailyExpenseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class MonthlyExpenseSerializerWithTotalExpense(serializers.ModelSerializer):
+    total_value = serializers.SerializerMethodField(read_only=True)
+    created_at = serializers.SerializerMethodField(read_only=True)
+    updated_at = serializers.SerializerMethodField(read_only=True)
+    month = serializers.SerializerMethodField(read_only=True)
+    year = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = DailyExpense
+        fields = ('id', 'month', 'year', 'total_value',
+                  'created_at', 'updated_at')
+
+    # Get month from the date field
+    def get_month(self, obj):
+        return obj.date.month
+
+    # Get year from the date field
+    def get_year(self, obj):
+        return obj.date.year
+
+    # Get total expense for a given month and year
+    def get_total_value(self, obj):
+        total_value = DailyExpense.objects.filter(date__month=obj.date.month, date__year=obj.date.year).aggregate(
+            total_value=Sum('price')).get('total_value')
+        return total_value
+
+    # Get created date. Created date is the date when the first expense is created for a given month and year
+    def get_created_at(self, obj):
+        created_at = DailyExpense.objects.filter(
+            date__month=obj.date.month, date__year=obj.date.year).order_by('created_at').first().created_at
+        return created_at
+
+    # Get updated date. Updated date is the date when the last expense is updated for a given month and year
+    def get_updated_at(self, obj):
+        updated_at = DailyExpense.objects.filter(
+            date__month=obj.date.month, date__year=obj.date.year).order_by('updated_at').last().updated_at
+        return updated_at
+
+
 class DailyIncomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = DailyIncome
@@ -67,20 +106,20 @@ class MonthlyBudgetSerializer(serializers.ModelSerializer):
 
 
 class MonthlyBudgetSerializerWithTotalBudget(MonthlyBudgetSerializer):
-    total_budget = serializers.SerializerMethodField(read_only=True)
+    total_value = serializers.SerializerMethodField(read_only=True)
     created_at = serializers.SerializerMethodField(read_only=True)
     updated_at = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = MonthlyBudget
-        fields = ('id', 'month', 'year', 'total_budget',
+        fields = ('id', 'month', 'year', 'total_value',
                   'created_at', 'updated_at')
 
     # get total budget for a given month and year
-    def get_total_budget(self, obj):
-        total_budget = MonthlyBudget.objects.filter(month=obj.month, year=obj.year).aggregate(
-            total_budget=Sum('budget')).get('total_budget')
-        return total_budget
+    def get_total_value(self, obj):
+        total_value = MonthlyBudget.objects.filter(month=obj.month, year=obj.year).aggregate(
+            total_value=Sum('budget')).get('total_value')
+        return total_value
 
     # get created date. Created date is the date when the first budget is created for a given month and year
     def get_created_at(self, obj):

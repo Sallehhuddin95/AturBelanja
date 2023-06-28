@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from datetime import datetime
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from ..models import DailyExpense
-from ..serializers import DailyExpenseSerializer
+from ..serializers import DailyExpenseSerializer, MonthlyExpenseSerializerWithTotalExpense
 
 # Create your views here.
 
@@ -22,6 +24,33 @@ def getExpensesByMonthAndYear(request):
     dailyExpense = DailyExpense.objects.filter(
         date__month=month, date__year=year, userId=userId)
     serializer = DailyExpenseSerializer(dailyExpense, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getExpenseByYear(request):
+    year = request.GET.get('year')
+    userId = request.GET.get('userId')
+    expenses = DailyExpense.objects.filter(userId=userId)
+
+    # Create a dictionary to store the unique expenses for each month
+    unique_expenses = {}
+
+    for expense in expenses:
+        # Extract the year and month from the date object
+        year_month = f"{expense.date.year}-{expense.date.month}"
+
+        if expense.date.year == int(year):
+            if year_month not in unique_expenses:
+                # Add the expense to the dictionary if it's the first one for the month
+                unique_expenses[year_month] = expense
+
+    # Retrieve the unique expenses from the dictionary
+    unique_expenses = list(unique_expenses.values())
+
+    serializer = MonthlyExpenseSerializerWithTotalExpense(
+        unique_expenses, many=True)
     return Response(serializer.data)
 
 
