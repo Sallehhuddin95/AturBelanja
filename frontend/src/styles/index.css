@@ -52,6 +52,12 @@ body {
   border-radius: 5px;
 }
 
+/* Chart */
+.bar-chart-div {
+  width: 500px;
+  height: 500px;
+}
+
 /* footer */
 
 #footer {

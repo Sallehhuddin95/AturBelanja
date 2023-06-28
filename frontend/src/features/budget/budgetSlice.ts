@@ -135,6 +135,24 @@ export const getAllBudgets = createAsyncThunk(
   }
 );
 
+export const getBudgetByYear = createAsyncThunk(
+  "budgets/fetchBudgetByYear",
+  async (data: any, thunkAPI: any) => {
+    try {
+      const token = thunkAPI.getState().user.loginUser.user?.token;
+      return await budgetService.getBudgetByYear(data, token);
+    } catch (error: Error | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const addBudget = createAsyncThunk(
   "budgets/addBudget",
   async (data: any, thunkAPI: any) => {
@@ -197,6 +215,9 @@ const budgetSlice = createSlice({
       state.monthlyBudgets = initialState.monthlyBudgets;
     },
     resetAllBudgets: (state) => {
+      state.allBudgets = initialState.allBudgets;
+    },
+    resetBudgetByYear: (state) => {
       state.allBudgets = initialState.allBudgets;
     },
     resetAddedBudget: (state) => {
@@ -284,6 +305,20 @@ const budgetSlice = createSlice({
         state.allBudgets.isLoading = false;
         state.allBudgets.isError = true;
         state.allBudgets.message = action.payload as string;
+      })
+      .addCase(getBudgetByYear.pending, (state) => {
+        state.allBudgets.isLoading = true;
+      })
+      .addCase(getBudgetByYear.fulfilled, (state, action) => {
+        state.allBudgets.isLoading = false;
+        state.allBudgets.isSuccess = true;
+        state.allBudgets.budgets = action.payload;
+        // console.log(action.payload);
+      })
+      .addCase(getBudgetByYear.rejected, (state, action) => {
+        state.allBudgets.isLoading = false;
+        state.allBudgets.isError = true;
+        state.allBudgets.message = action.payload as string;
       });
   },
 });
@@ -294,6 +329,7 @@ export const {
   resetDeletedBudget,
   resetEditedBudget,
   resetAllBudgets,
+  resetBudgetByYear,
 } = budgetSlice.actions;
 export const selectBudgets = (state: RootState) => state.budget.monthlyBudgets;
 export default budgetSlice.reducer;
