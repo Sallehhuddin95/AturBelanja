@@ -28,6 +28,21 @@ const getAllBudgets = async (data: any, token: any) => {
   return response.data;
 };
 
+const getBudgetByYear = async (data: any, token: any) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    params: data,
+  };
+
+  // console.log("data", data);
+
+  const response = await axios.get(`${API_URL}year/`, config);
+  return response.data;
+};
+
 const addBudget = async (data: any, token: any) => {
   const config = {
     headers: {
@@ -70,6 +85,7 @@ const deleteBudget = async (data: any, token: any) => {
 const budgetService = {
   getBudgets,
   getAllBudgets,
+  getBudgetByYear,
   addBudget,
   updateBudget,
   deleteBudget,

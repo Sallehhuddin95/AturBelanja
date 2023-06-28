@@ -11,3 +11,4 @@ export { default as ProtectedRoute } from "./ProtectedRoute";
 export { default as Message } from "./Message";
 export { default as BudgetsTable } from "./BudgetsTable";
 export { default as BudgetsForm } from "./BudgetsForm";
+export { default as BarGraph } from "./BarGraph";
