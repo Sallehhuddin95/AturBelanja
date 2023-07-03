@@ -42,7 +42,7 @@ function BudgetHistoryScreen() {
                 <td>
                   {getMonthName(budget.month)} {budget.year}
                 </td>
-                <td>{budget.total_budget}</td>
+                <td>{budget.total_value}</td>
                 <td>{budget.created_at.slice(0, 10)}</td>
                 <td>{budget.updated_at.slice(0, 10)}</td>
               </tr>

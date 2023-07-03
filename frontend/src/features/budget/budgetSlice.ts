@@ -17,7 +17,7 @@ type TotalBudget = {
   id: string;
   month: number;
   year: number;
-  total_budget: number;
+  total_value: number;
   created_at: string;
   updated_at: string;
 };
@@ -290,16 +290,7 @@ const budgetSlice = createSlice({
       .addCase(getAllBudgets.fulfilled, (state, action) => {
         state.allBudgets.isLoading = false;
         state.allBudgets.isSuccess = true;
-        //remove duplicated month from the same year
-        const budgets = action.payload;
-        const uniqueBudgets = budgets.filter(
-          (budget: any, index: number, self: any) =>
-            index ===
-            self.findIndex(
-              (b: any) => b.month === budget.month && b.year === budget.year
-            )
-        );
-        state.allBudgets.budgets = uniqueBudgets;
+        state.allBudgets.budgets = action.payload;
       })
       .addCase(getAllBudgets.rejected, (state, action) => {
         state.allBudgets.isLoading = false;
@@ -313,7 +304,6 @@ const budgetSlice = createSlice({
         state.allBudgets.isLoading = false;
         state.allBudgets.isSuccess = true;
         state.allBudgets.budgets = action.payload;
-        // console.log(action.payload);
       })
       .addCase(getBudgetByYear.rejected, (state, action) => {
         state.allBudgets.isLoading = false;
