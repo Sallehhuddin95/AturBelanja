@@ -24,7 +24,23 @@ def getBudgetByMonthAndYear(request):
 def getTotalBudgets(request):
     userId = request.GET.get('userId')
     budgets = MonthlyBudget.objects.filter(userId=userId)
-    serializer = MonthlyBudgetSerializerWithTotalBudget(budgets, many=True)
+
+    # Create a dictionary to store the unique budgets for each month
+    unique_budgets = {}
+
+    for budget in budgets:
+        # Create a unique identifier for each month
+        month_key = f"{budget.month}-{budget.year}"
+
+        if month_key not in unique_budgets:
+            # Add the budget to the dictionary if it's the first one for the month
+            unique_budgets[month_key] = budget
+
+    # Retrieve the unique budgets from the dictionary
+    unique_budgets = list(unique_budgets.values())
+
+    serializer = MonthlyBudgetSerializerWithTotalBudget(
+        unique_budgets, many=True)
     return Response(serializer.data)
 
 
