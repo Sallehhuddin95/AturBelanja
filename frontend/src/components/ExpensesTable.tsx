@@ -184,6 +184,15 @@ function ExpensesTable(props: any) {
                           </td>
                         </tr>
                       ))}
+                    {expenses.filter(
+                      (expense) => new Date(expense.date).getDate() === day
+                    ).length === 0 && (
+                      <tr>
+                        <td colSpan={7} className="text-center">
+                          No expenses for this day.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </Table>
               </Row>
