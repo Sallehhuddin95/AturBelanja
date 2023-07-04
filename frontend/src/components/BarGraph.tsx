@@ -42,11 +42,9 @@ function BarGraph({ data }: { data: any }) {
   });
 
   return (
-    <div className="bar-chart-div">
+    <div className="bar-chart-div w-100">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          width={500}
-          height={300}
           data={chartData}
           margin={{
             top: 5,
