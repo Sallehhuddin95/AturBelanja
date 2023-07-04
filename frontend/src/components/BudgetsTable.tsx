@@ -71,26 +71,33 @@ function BudgetsTable(props: any) {
             </tr>
           </thead>
           <tbody>
-            {budgets.map((budget: any, index: any) => (
-              <tr key={budget.id}>
-                <td>{index + 1}</td>
-                <td>{budget.category}</td>
-                <td>{budget.budget}</td>
-                <td>{budget.note}</td>
-                <td className="d-flex justify-content-center">
-                  <Button
-                    className="me-2"
-                    onClick={() => handleEdit(budget.id)}
-                  >
-                    <FaEdit />
-                  </Button>
-
-                  <Button onClick={() => handleDelete(budget.id)}>
-                    <FaTrashAlt />
-                  </Button>
+            {budgets && budgets.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="text-center">
+                  No budgets available for this month.
                 </td>
               </tr>
-            ))}
+            ) : (
+              budgets.map((budget: any, index: any) => (
+                <tr key={budget.id}>
+                  <td>{index + 1}</td>
+                  <td>{budget.category}</td>
+                  <td>{budget.budget}</td>
+                  <td>{budget.note}</td>
+                  <td className="d-flex justify-content-center">
+                    <Button
+                      className="me-2"
+                      onClick={() => handleEdit(budget.id)}
+                    >
+                      <FaEdit />
+                    </Button>
+                    <Button onClick={() => handleDelete(budget.id)}>
+                      <FaTrashAlt />
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </Table>
       </Row>

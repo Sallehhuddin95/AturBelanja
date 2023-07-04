@@ -179,6 +179,15 @@ function IncomesTable(props: any) {
                           </td>
                         </tr>
                       ))}
+                    {incomes.filter(
+                      (income) => new Date(income.date).getDate() === day
+                    ).length === 0 && (
+                      <tr>
+                        <td colSpan={7} className="text-center">
+                          No incomes for this day.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </Table>
               </Row>
