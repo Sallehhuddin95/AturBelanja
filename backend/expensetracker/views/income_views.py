@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.decorators import api_view, permission_classes
 from ..models import DailyIncome
-from ..serializers import DailyIncomeSerializer
+from ..serializers import DailyIncomeSerializer, MonthlyIncomeSerializerWithTotalIncome
 
 
 @api_view(['GET'])
@@ -13,6 +14,33 @@ def getIncomeByMonthAndYear(request):
     dailyIncome = DailyIncome.objects.filter(
         date__month=month, date__year=year, userId=userId)
     serializer = DailyIncomeSerializer(dailyIncome, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getIncomesByYear(request):
+    year = request.GET.get('year')
+    userId = request.GET.get('userId')
+    incomes = DailyIncome.objects.filter(userId=userId)
+
+    # Create a dictionary to store the unique incomes for each month
+    unique_incomes = {}
+
+    for income in incomes:
+        # Create a unique identifier for each month
+        month_key = f"{income.date.month}-{income.date.year}"
+
+        if income.date.year == int(year):
+            if month_key not in unique_incomes:
+                # Add the income to the dictionary if it's the first one for the month
+                unique_incomes[month_key] = income
+
+    # Retrieve the unique incomes from the dictionary
+    unique_incomes = list(unique_incomes.values())
+
+    serializer = MonthlyIncomeSerializerWithTotalIncome(
+        unique_incomes, many=True)
     return Response(serializer.data)
 
 
