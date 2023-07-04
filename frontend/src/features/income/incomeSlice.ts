@@ -11,9 +11,25 @@ type Income = {
   payment: string;
 };
 
+type TotalIncomes = {
+  id: string;
+  month: number;
+  year: number;
+  total_value: number;
+  created_at: string;
+  updated_at: string;
+};
+
 type IncomeState = {
   monthlyIncomes: {
     incomes: Income[];
+    isLoading: boolean;
+    isError: boolean;
+    isSuccess: boolean;
+    message: string | null;
+  };
+  allIncomes: {
+    incomes: TotalIncomes[];
     isLoading: boolean;
     isError: boolean;
     isSuccess: boolean;
@@ -50,6 +66,13 @@ const initialState: IncomeState = {
     isSuccess: false,
     message: "",
   },
+  allIncomes: {
+    incomes: [],
+    isLoading: false,
+    isError: false,
+    isSuccess: false,
+    message: "",
+  },
   addedIncome: {
     income: [],
     isLoading: false,
@@ -78,6 +101,25 @@ export const getIncomes = createAsyncThunk(
   async (data: any, thunkAPI) => {
     try {
       return await incomeService.getIncomes(data);
+    } catch (error: Error | any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const getIncomesByYear = createAsyncThunk(
+  "income/getIncomesByYear",
+  async (data: any, thunkAPI: any) => {
+    try {
+      const token = thunkAPI.getState().user.loginUser.user?.token;
+      // console.log("token", token);
+      return await incomeService.getIncomesByYear(data, token);
     } catch (error: Error | any) {
       const message =
         (error.response &&
@@ -148,6 +190,9 @@ const incomeSlice = createSlice({
     resetMonthlyIncome: (state) => {
       state.monthlyIncomes = initialState.monthlyIncomes;
     },
+    resetAllIncome: (state) => {
+      state.allIncomes = initialState.allIncomes;
+    },
     resetAddedIncome: (state) => {
       state.addedIncome = initialState.addedIncome;
     },
@@ -171,6 +216,20 @@ const incomeSlice = createSlice({
       state.monthlyIncomes.isLoading = false;
       state.monthlyIncomes.isError = true;
       state.monthlyIncomes.message = "Error: " + action.payload;
+    });
+    builder.addCase(getIncomesByYear.pending, (state) => {
+      state.allIncomes.isLoading = true;
+    });
+    builder.addCase(getIncomesByYear.fulfilled, (state, action) => {
+      state.allIncomes.isLoading = false;
+      state.allIncomes.isSuccess = true;
+      state.allIncomes.incomes = action.payload;
+      // console.log(action.payload);
+    });
+    builder.addCase(getIncomesByYear.rejected, (state, action) => {
+      state.allIncomes.isLoading = false;
+      state.allIncomes.isError = true;
+      state.allIncomes.message = "Error: " + action.payload;
     });
     builder.addCase(addIncome.pending, (state) => {
       state.addedIncome.isLoading = true;

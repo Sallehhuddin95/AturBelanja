@@ -10,6 +10,19 @@ const getIncomes = async (data: any) => {
   return response.data;
 };
 
+const getIncomesByYear = async (data: any, token: any) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    params: data,
+  };
+
+  const response = await axios.get(`${API_URL}year/`, config);
+  return response.data;
+};
+
 const addIncome = async (data: any) => {
   const response = await axios.post(`${API_URL}add/`, data);
 
@@ -28,6 +41,7 @@ const deleteIncome = async (data: any) => {
 
 const incomeService = {
   getIncomes,
+  getIncomesByYear,
   addIncome,
   editIncome,
   deleteIncome,
