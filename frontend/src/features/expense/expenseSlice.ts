@@ -99,9 +99,10 @@ const initialState: ExpenseState = {
 
 export const getExpenses = createAsyncThunk(
   "expense/getExpenses",
-  async (data: any, thunkAPI) => {
+  async (data: any, thunkAPI: any) => {
     try {
-      return await expenseService.getExpenses(data);
+      const token = thunkAPI.getState().user.loginUser.user?.token;
+      return await expenseService.getExpenses(data, token);
     } catch (error: Error | any) {
       const message =
         (error.response &&
@@ -135,9 +136,10 @@ export const getExpensesByYear = createAsyncThunk(
 
 export const addExpense = createAsyncThunk(
   "expense/addExpense",
-  async (data: any, thunkAPI) => {
+  async (data: any, thunkAPI: any) => {
     try {
-      return await expenseService.addExpense(data);
+      const token = thunkAPI.getState().user.loginUser.user?.token;
+      return await expenseService.addExpense(data, token);
     } catch (error: Error | any) {
       const message =
         (error.response &&
@@ -152,9 +154,10 @@ export const addExpense = createAsyncThunk(
 
 export const deleteExpense = createAsyncThunk(
   "expense/deleteExpense",
-  async (data: any, thunkAPI) => {
+  async (data: any, thunkAPI: any) => {
     try {
-      return await expenseService.deleteExpense(data);
+      const token = thunkAPI.getState().user.loginUser.user?.token;
+      return await expenseService.deleteExpense(data, token);
     } catch (error: Error | any) {
       const message =
         (error.response &&
@@ -169,9 +172,10 @@ export const deleteExpense = createAsyncThunk(
 
 export const editExpense = createAsyncThunk(
   "expense/editExpense",
-  async (data: any, thunkAPI) => {
+  async (data: any, thunkAPI: any) => {
     try {
-      return await expenseService.editExpense(data);
+      const token = thunkAPI.getState().user.loginUser.user?.token;
+      return await expenseService.editExpense(data, token);
     } catch (error: Error | any) {
       const message =
         (error.response &&
