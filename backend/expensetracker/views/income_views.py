@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
@@ -7,6 +8,7 @@ from ..serializers import DailyIncomeSerializer, MonthlyIncomeSerializerWithTota
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def getIncomeByMonthAndYear(request):
     month = request.GET.get('month')
     year = request.GET.get('year')
@@ -45,6 +47,7 @@ def getIncomesByYear(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def addIncome(request):
     income = DailyIncome.objects.create(
         userId=request.data.get('userId'),
@@ -59,20 +62,25 @@ def addIncome(request):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def updateIncome(request, pk):
-    data = request.data
-    income = DailyIncome.objects.get(id=pk)
-    # income.userId = 1
-    income.date = data['date']
-    income.category = data['category']
-    income.note = data['note']
-    income.amount = data['amount']
-    income.payment = data['payment']
-    income.save()
-    return Response('Income Updated')
+    try:
+        income = DailyIncome.objects.get(id=pk)
+        print('Original Data:', request.data)
+        serializer = DailyIncomeSerializer(instance=income, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        print('Updated Data:', serializer.data)
+        return Response(serializer.data)
+    except DailyIncome.DoesNotExist:
+        return Response({'error': 'Income not found.'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print('Error:', e)
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def deleteIncome(request, pk):
     income = DailyIncome.objects.get(id=pk)
     income.delete()

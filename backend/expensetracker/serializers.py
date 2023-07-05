@@ -47,6 +47,9 @@ class DailyExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = DailyExpense
         fields = '__all__'
+        extra_kwargs = {
+            'note': {'required': False, 'allow_blank': True, 'allow_null': True, 'default': ''}
+        }
 
 
 class MonthlyExpenseSerializerWithTotalExpense(serializers.ModelSerializer):
@@ -131,6 +134,9 @@ class DailyIncomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = DailyIncome
         fields = '__all__'
+        extra_kwargs = {
+            'note': {'required': False, 'allow_blank': True, 'allow_null': True, 'default': ''}
+        }
 
 
 class MonthlyBudgetSerializer(serializers.ModelSerializer):
@@ -140,6 +146,9 @@ class MonthlyBudgetSerializer(serializers.ModelSerializer):
     class Meta:
         model = MonthlyBudget
         fields = '__all__'
+        extra_kwargs = {
+            'note': {'required': False, 'allow_blank': True, 'allow_null': True, 'default': ''}
+        }
 
 # get all budget for a given month and year, calculate total budget, get created date, get updated date
 

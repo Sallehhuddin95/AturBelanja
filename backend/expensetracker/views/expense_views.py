@@ -10,6 +10,7 @@ from ..serializers import DailyExpenseSerializer, MonthlyExpenseSerializerWithTo
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def getExpenses(request):
     dailyExpense = DailyExpense.objects.all()
     serializer = DailyExpenseSerializer(dailyExpense, many=True)
@@ -17,6 +18,7 @@ def getExpenses(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def getExpensesByMonthAndYear(request):
     month = request.GET.get('month')
     year = request.GET.get('year')
@@ -55,6 +57,7 @@ def getExpenseByYear(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def addExpense(request):
     print(request.data.get('price'))
     expense = DailyExpense.objects.create(
@@ -72,6 +75,7 @@ def addExpense(request):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def deleteExpense(request, pk):
     expense = DailyExpense.objects.get(id=pk)
     expense.delete()
@@ -79,16 +83,10 @@ def deleteExpense(request, pk):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def updateExpense(request, pk):
-    data = request.data
     expense = DailyExpense.objects.get(id=pk)
-    # expense.userId = 1
-    expense.date = data['date']
-    expense.detail = data['detail']
-    expense.category = data['category']
-    expense.note = data['note']
-    expense.price = data['price']
-    expense.payment = data['payment']
-    expense.save()
-    serializer = DailyExpenseSerializer(expense, many=False)
+    serializer = DailyExpenseSerializer(instance=expense, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
     return Response(serializer.data)
