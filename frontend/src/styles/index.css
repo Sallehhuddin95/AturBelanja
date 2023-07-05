@@ -2,7 +2,7 @@ html {
   font-size: 62.5%;
   font-family: "Roboto", sans-serif;
   scroll-behavior: smooth;
-  height: 100vh;
+  height: 100%;
 }
 
 body {
@@ -13,5 +13,55 @@ body {
 }
 
 #root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+#root > div {
   height: 100%;
+}
+
+/* header */
+#header {
+  z-index: 3;
+}
+
+/* feature card */
+.feature-card {
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: scale(1.1);
+  border: solid 1px #808080;
+}
+
+.feature-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Content */
+.content {
+  padding-bottom: 2.5rem;
+}
+
+.today {
+  background-color: #b6d0e2;
+  border-radius: 5px;
+}
+
+/* Chart */
+.bar-chart-div {
+  width: 500px;
+  height: 500px;
+}
+
+/* footer */
+
+#footer {
+  height: 2.5rem;
+  padding: 15px 5px;
+  margin-top: auto;
 }
